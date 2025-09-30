@@ -1,28 +1,25 @@
-'use client';
-import { useState, useEffect } from "react";
-import { useUser, useClerk } from "@clerk/nextjs";
+"use client";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
+
+// Clerk components
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
 export default function UserNavbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, isSignedIn } = useUser();
-  const { signOut } = useClerk();
-  const router = useRouter();
 
-  const navLinks = ["Home", "Rooms", "Dashboard", "Badges", "Contact Us"];
-
-  const handleProfileClick = () => {
-    if (isSignedIn && user) {
-      router.push("/profile"); // your profile page
-    } else {
-      router.push("/sign-up");
-    }
-  };
+  // Explicit links with labels and paths
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Rooms", href: "/rooms" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Badges", href: "/badges" },
+    { label: "Contact Us", href: "/contact-us" },
+  ];
 
   return (
-    <nav className="bg-gray-900 text-white shadow-lg sticky top-0 z-50 transition-all duration-300">
+    <nav className="bg-gray-900 text-white shadow-lg shadow-yellow-500/40 sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         <div className="flex justify-between items-center h-20">
 
@@ -37,25 +34,29 @@ export default function UserNavbar() {
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <a
-                key={link}
-                href={link === "Home" ? "/" : `/${link.toLowerCase().replace(" ", "")}`}
+                key={link.label}
+                href={link.href}
                 className="relative font-medium text-white hover:text-yellow-400 transition-colors group"
               >
-                {link}
+                {link.label}
                 <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-yellow-500 transition-all duration-300 group-hover:w-full"></span>
               </a>
             ))}
           </div>
 
-          {/* Right: Profile Avatar */}
-          <div className="flex items-center space-x-4">
-            <Avatar
-              className="w-12 h-12 rounded-full border-2 border-yellow-500 hover:scale-110 transition-transform duration-300 cursor-pointer"
-              onClick={handleProfileClick}
-            >
-              <AvatarImage src={user?.imageUrl || "/favicon.ico"} alt="User Avatar" />
-              <AvatarFallback>{user?.firstName?.[0] || "U"}</AvatarFallback>
-            </Avatar>
+          {/* Right: Authentication */}
+          <div className="hidden md:flex items-center space-x-4">
+            <SignedOut>
+              <SignInButton>
+                <button className="w-full bg-yellow-500 text-black hover:bg-yellow-400 transition-all duration-300">
+                  Sign In
+                </button>
+              </SignInButton>
+            </SignedOut>
+
+            <SignedIn>          
+                <UserButton afterSignOutUrl="/" />
+            </SignedIn>
           </div>
 
           {/* Mobile Menu Button */}
@@ -88,13 +89,27 @@ export default function UserNavbar() {
         <div className="md:hidden bg-gray-800 border-t border-yellow-500 animate-slide-down">
           {navLinks.map((link) => (
             <a
-              key={link}
-              href={link === "Home" ? "/" : `/${link.toLowerCase().replace(" ", "")}`}
+              key={link.label}
+              href={link.href}
               className="block px-6 py-3 hover:bg-yellow-500 hover:text-white transition-all duration-300"
             >
-              {link}
+              {link.label}
             </a>
           ))}
+
+          {/* Mobile Auth Section */}
+          <div className="px-6 py-3">
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+            <SignedOut>
+              <a href="/sign-in">
+                <Button className="w-full bg-yellow-500 text-black hover:bg-yellow-400 transition-all duration-300">
+                  Sign In
+                </Button>
+              </a>
+            </SignedOut>
+          </div>
         </div>
       )}
     </nav>
