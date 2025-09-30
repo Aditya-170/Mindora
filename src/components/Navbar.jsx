@@ -1,15 +1,28 @@
-"use client";
-import { useState } from "react";
+'use client';
+import { useState, useEffect } from "react";
+import { useUser, useClerk } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 
 export default function UserNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, isSignedIn } = useUser();
+  const { signOut } = useClerk();
+  const router = useRouter();
 
   const navLinks = ["Home", "Rooms", "Dashboard", "Badges", "Contact Us"];
 
+  const handleProfileClick = () => {
+    if (isSignedIn && user) {
+      router.push("/profile"); // your profile page
+    } else {
+      router.push("/sign-up");
+    }
+  };
+
   return (
-    <nav className="bg-gray-900 text-white shadow-lg shadow-yellow-500/40 sticky top-0 z-50 transition-all duration-300">
+    <nav className="bg-gray-900 text-white shadow-lg sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         <div className="flex justify-between items-center h-20">
 
@@ -35,10 +48,13 @@ export default function UserNavbar() {
           </div>
 
           {/* Right: Profile Avatar */}
-          <div className="flex items-center">
-            <Avatar className="w-12 h-12 rounded-full border-2 border-yellow-500 hover:scale-110 transition-transform duration-300 cursor-pointer">
-              <AvatarImage src="/favicon.ico" alt="User Avatar" />
-              <AvatarFallback>U</AvatarFallback>
+          <div className="flex items-center space-x-4">
+            <Avatar
+              className="w-12 h-12 rounded-full border-2 border-yellow-500 hover:scale-110 transition-transform duration-300 cursor-pointer"
+              onClick={handleProfileClick}
+            >
+              <AvatarImage src={user?.imageUrl || "/favicon.ico"} alt="User Avatar" />
+              <AvatarFallback>{user?.firstName?.[0] || "U"}</AvatarFallback>
             </Avatar>
           </div>
 
