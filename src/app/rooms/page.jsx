@@ -3,8 +3,9 @@
 import UserNavbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-
+import { useRouter } from "next/navigation";
 export default function RoomsPage() {
+  const router = useRouter();
   const [rooms, setRooms] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -16,8 +17,8 @@ export default function RoomsPage() {
   });
   const [uploading, setUploading] = useState(false);
 
- const { user } = useUser();
-  
+  const { user } = useUser();
+
 
   // Fetch all rooms
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function RoomsPage() {
       const res = await fetch("/api/rooms");
       const data = await res.json();
       setRooms(data);
-      
+
     };
     fetchRooms();
   }, []);
@@ -41,7 +42,7 @@ export default function RoomsPage() {
       body: formData,
     });
     const data = await res.json();
-    console.log("url:",data.secure_url);
+    console.log("url:", data.secure_url);
     setFormData((prev) => ({ ...prev, image: data.secure_url }));
     setUploading(false);
 
@@ -69,7 +70,10 @@ export default function RoomsPage() {
       console.error(err);
     }
   };
-
+  const handleClick = (id) => {
+      router.push(`/rooms/${id}`);
+    
+  };
   return (
     <>
       <UserNavbar />
@@ -182,9 +186,10 @@ export default function RoomsPage() {
 
               <button
                 disabled={room.currentMembers >= room.maxMembers}
+                onClick={() => handleClick(room._id)}
                 className={`mt-4 w-full py-2 rounded-lg font-semibold ${room.currentMembers >= room.maxMembers
-                    ? "bg-gray-600 cursor-not-allowed text-gray-300"
-                    : "bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition"
+                  ? "bg-gray-600 cursor-not-allowed text-gray-300"
+                  : "bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition"
                   }`}
               >
                 {room.currentMembers >= room.maxMembers ? "This group is full" : "Join and chat now"}
