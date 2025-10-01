@@ -20,13 +20,13 @@ export default function RoomsPage() {
   const { user } = useUser();
 
 
-  // Fetch all rooms
   useEffect(() => {
     const fetchRooms = async () => {
       const res = await fetch("/api/rooms");
       const data = await res.json();
-      setRooms(data);
 
+      // ✅ Only keep rooms that are not full
+      setRooms(data.filter(room => room.currentMembers < room.maxMembers));
     };
     fetchRooms();
   }, []);
@@ -70,10 +70,26 @@ export default function RoomsPage() {
       console.error(err);
     }
   };
-  const handleClick = (id) => {
-      router.push(`/rooms/${id}`);
-    
+  const handleJoinRequest = async (roomId) => {
+    try {
+      const res = await fetch("/api/join-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomId, fromUserId: user.id }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Join request sent ✅");
+      } else {
+        alert(data.error || "Failed to send request");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error sending join request");
+    }
   };
+
   return (
     <>
       <UserNavbar />
@@ -185,14 +201,10 @@ export default function RoomsPage() {
               </p>
 
               <button
-                disabled={room.currentMembers >= room.maxMembers}
-                onClick={() => handleClick(room._id)}
-                className={`mt-4 w-full py-2 rounded-lg font-semibold ${room.currentMembers >= room.maxMembers
-                  ? "bg-gray-600 cursor-not-allowed text-gray-300"
-                  : "bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition"
-                  }`}
+                onClick={() => handleJoinRequest(room._id)}
+                className="mt-4 w-full py-2 rounded-lg font-semibold bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition"
               >
-                {room.currentMembers >= room.maxMembers ? "This group is full" : "Join and chat now"}
+                Ask to Join
               </button>
             </div>
           ))}

@@ -1,42 +1,42 @@
-// src/app/api/invites/route.js
+// src/app/api/notifications/requests/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-import Invite from "@/models/invite";
+// import Request from "@/models/request";
 import roomModel from "@/models/roomModel";
+import joinRequest from "@/models/joinRequest";
 
 export async function GET(req) {
   try {
     await connectDB();
 
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get("userId"); // owner’s userId
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Fetch invites for this user where status is pending
-    const invites = await Invite.find({ toUserId: userId, status: "pending" });
+    // Fetch requests where the logged-in user is the room owner
+    const requests = await joinRequest.find({ toOwnerId: userId, status: "pending" });
 
-    // Include room details
     const result = await Promise.all(
-      invites.map(async (invite) => {
-        const room = await roomModel.findById(invite.roomId);
+      requests.map(async (request) => {
+        const room = await roomModel.findById(request.roomId);
         return {
-          inviteId: invite._id,
-          roomId: invite.roomId,
+          requestId: request._id,
+          roomId: request.roomId,
           roomName: room?.name,
           roomImage: room?.image,
           roomOwner: room?.owner,
-          fromUserId: invite.fromUserId,
-          status: invite.status,
+          fromUserId: request.fromUserId,
+          status: request.status,
         };
       })
     );
 
     return NextResponse.json(result, { status: 200 });
   } catch (err) {
-    console.error("Error fetching invites:", err);
+    console.error("Error fetching requests:", err);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }
