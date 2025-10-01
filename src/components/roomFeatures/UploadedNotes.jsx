@@ -72,7 +72,8 @@ export default function UploadedNotes({ roomId }) {
             </a>
           </div>
 
-          <div className="flex-1 min-h-0 p-4">
+          {/* Scrollable PDF container */}
+          <div className="flex-1 min-h-0 p-4 overflow-y-auto">
             <iframe
               src={selectedNote.link || selectedNote.url}
               className="w-full h-full rounded-lg border border-yellow-500/20 min-h-0"
@@ -100,7 +101,8 @@ export default function UploadedNotes({ roomId }) {
         {loading && <p className="text-center text-yellow-200">Loading...</p>}
         {error && <p className="text-center text-red-400">{error}</p>}
 
-        <div className="flex-1 min-h-0 overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-zinc-700">
+        {/* Scrollable list of notes */}
+        <div className="flex-1 min-h-0 overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-zinc-700 max-h-[500px]">
           {notes.map((note, idx) => (
             <div
               key={idx}

@@ -53,7 +53,8 @@ export default function UploadedLinks({ roomId }) {
           No links uploaded yet.
         </div>
       ) : (
-        <div className="flex-1 min-h-0 overflow-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-zinc-700">
+        // Scrollable links container
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-zinc-700 max-h-[500px]">
           {links.map((link, i) => (
             <div
               key={i}

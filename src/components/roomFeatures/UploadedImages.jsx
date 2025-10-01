@@ -48,9 +48,11 @@ export default function UploadedImages({ roomId }) {
   }, [roomId]);
 
   // VIEW MODE
+  // VIEW MODE
   if (selectedImage) {
     return (
       <div className="flex-1 flex flex-col min-h-0">
+        {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-yellow-500/20 bg-zinc-800 rounded-t-xl">
           <button
             onClick={() => setSelectedImage(null)}
@@ -63,14 +65,18 @@ export default function UploadedImages({ roomId }) {
           </h2>
         </div>
 
-        <div className="flex-1 min-h-0 flex items-center justify-center p-4 overflow-auto bg-zinc-900 rounded-b-xl">
-          <img
-            src={selectedImage.url}
-            alt={selectedImage.topic}
-            className="max-h-full max-w-full rounded-xl border border-yellow-500/20 object-contain"
-          />
+        {/* Fixed-size image container */}
+        <div className="flex-1 min-h-0 p-4 bg-zinc-900 rounded-b-xl flex justify-center items-center">
+          <div className="w-full max-w-3xl h-[500px] bg-zinc-800 rounded-xl border border-yellow-500/20 overflow-hidden">
+            <img
+              src={selectedImage.url}
+              alt={selectedImage.topic}
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
 
+        {/* Footer */}
         <div className="p-4 bg-zinc-800 border-t border-yellow-500/20 flex justify-between rounded-b-xl text-yellow-200">
           <span>Uploaded by: {selectedImage.uploadedBy}</span>
           <span>Date: {selectedImage.date}</span>
@@ -86,7 +92,8 @@ export default function UploadedImages({ roomId }) {
         Uploaded Images
       </div>
 
-      <div className="flex-1 min-h-0 overflow-auto p-4 space-y-6">
+      {/* Scrollable container for images */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-zinc-700">
         {loading ? (
           <p className="text-center text-yellow-300">Loading images...</p>
         ) : images.length === 0 ? (
@@ -112,12 +119,8 @@ export default function UploadedImages({ roomId }) {
                   </button>
                 </div>
                 <div className="p-3 flex flex-col gap-1 text-yellow-200">
-                  <p className="font-semibold text-yellow-300 truncate">
-                    {img.topic}
-                  </p>
-                  <p className="text-sm truncate">
-                    Uploaded by {img.uploadedBy}
-                  </p>
+                  <p className="font-semibold text-yellow-300 truncate">{img.topic}</p>
+                  <p className="text-sm truncate">Uploaded by {img.uploadedBy}</p>
                   <p className="text-xs text-gray-400">{img.date}</p>
                 </div>
               </div>

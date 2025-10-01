@@ -69,10 +69,11 @@ export default function UploadNotes({ roomId }) {
       if (!saveRes.ok) throw new Error(saveData.message || "Failed to save note");
 
       toast.success(`Note "${topic}" uploaded successfully!`, { style: { background: "#FACC15", color: "#000" } });
+
       fetch("/api/short-notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, link: pdfUrl, roomId }),
+        body: JSON.stringify({ topic, pdfUrl, roomId }),
       }).catch((err) => console.error("Short notes generation failed:", err));
       setFile(null);
       setTopic("");
