@@ -18,8 +18,6 @@ const roomSchema = new mongoose.Schema(
     owner: { type: String, required: true },
     image: { type: String, default: "" }, // Room banner/icon
     description: { type: String, required: true, minlength: 10, maxlength: 200 },
-
-    // Members
     createdBy: { type: String, required: true }, // Clerk userId of room creator
     members: [{ type: String }], // Clerk userIds
     currentMembers: { type: Number, default: 1 }, // Room creator counts as 1
