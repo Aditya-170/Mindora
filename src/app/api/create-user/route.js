@@ -18,7 +18,7 @@ export async function POST(req) {
         lastName,
         email,
         profileImage: profileImage || "",
-        badges: [],
+        badges: ["Beginner"],
       });
     }
 
