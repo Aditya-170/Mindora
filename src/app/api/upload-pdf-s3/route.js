@@ -6,7 +6,6 @@ export const config = {
 
 export async function POST(req) {
   try {
-    // Convert request to buffer
     const arrayBuffer = await req.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
