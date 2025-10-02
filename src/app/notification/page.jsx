@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import UserNavbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function NotificationsPage() {
     const { user } = useUser();
     const [invites, setInvites] = useState([]);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState("invites"); // ✅ sliding option
+    const [activeTab, setActiveTab] = useState("invites");
 
     useEffect(() => {
         if (!user) return;
@@ -24,10 +26,14 @@ export default function NotificationsPage() {
                 const requestData = await requestRes.json();
 
                 if (inviteRes.ok) setInvites(inviteData);
+                else toast.error("Failed to fetch invites!", { style: { background: "red", color: "white" } });
+
                 if (requestRes.ok) setRequests(requestData);
+                else toast.error("Failed to fetch requests!", { style: { background: "red", color: "white" } });
 
             } catch (err) {
                 console.error(err);
+                toast.error("Error fetching notifications!", { style: { background: "red", color: "white" } });
             } finally {
                 setLoading(false);
             }
@@ -46,9 +52,14 @@ export default function NotificationsPage() {
 
             if (res.ok) {
                 setInvites((prev) => prev.filter((i) => i.inviteId !== inviteId));
+                toast.success(`Invite ${action}ed successfully!`, { style: { background: "black", color: "yellow" } });
+            } else {
+                const data = await res.json();
+                toast.error(data.error || "Failed to perform action!", { style: { background: "red", color: "white" } });
             }
         } catch (err) {
             console.error(err);
+            toast.error(err.message || "Failed to perform action!", { style: { background: "red", color: "white" } });
         }
     };
 
@@ -62,9 +73,14 @@ export default function NotificationsPage() {
 
             if (res.ok) {
                 setRequests((prev) => prev.filter((r) => r.requestId !== requestId));
+                toast.success(`Request ${action}ed successfully!`, { style: { background: "black", color: "yellow" } });
+            } else {
+                const data = await res.json();
+                toast.error(data.error || "Failed to perform action!", { style: { background: "red", color: "white" } });
             }
         } catch (err) {
             console.error(err);
+            toast.error(err.message || "Failed to perform action!", { style: { background: "red", color: "white" } });
         }
     };
 
@@ -77,7 +93,7 @@ export default function NotificationsPage() {
                     Notifications
                 </h1>
 
-                {/* ✅ Sliding Tabs */}
+                {/* Sliding Tabs */}
                 <div className="flex justify-center mb-6 gap-6">
                     <button
                         onClick={() => setActiveTab("invites")}
@@ -105,19 +121,18 @@ export default function NotificationsPage() {
                     <p className="text-center text-yellow-400 mt-10">Loading...</p>
                 ) : (
                     <div className="flex flex-col gap-10 items-center">
-                        {/* ✅ Invitations Section */}
+                        {/* Invitations Section */}
                         {activeTab === "invites" && (
-                            <section className="w-[85%]"> {/* 15% narrower */}
+                            <section className="w-[85%]">
                                 {invites.length === 0 ? (
                                     <p className="text-gray-300 text-center">No pending invitations.</p>
                                 ) : (
-                                    <div className="flex flex-col gap-6"> {/* larger spacing */}
+                                    <div className="flex flex-col gap-6">
                                         {invites.map((invite) => (
                                             <div
                                                 key={invite.inviteId}
                                                 className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex justify-between items-center"
                                             >
-                                                {/* Left */}
                                                 <div className="flex items-center gap-4">
                                                     {invite.roomImage && (
                                                         <img
@@ -134,7 +149,6 @@ export default function NotificationsPage() {
                                                     </div>
                                                 </div>
 
-                                                {/* Right (moved left) */}
                                                 <div className="flex gap-2 ml-6">
                                                     <button
                                                         onClick={() => handleInviteAction(invite.inviteId, "accept")}
@@ -156,7 +170,7 @@ export default function NotificationsPage() {
                             </section>
                         )}
 
-                        {/* ✅ Requests Section */}
+                        {/* Requests Section */}
                         {activeTab === "requests" && (
                             <section className="w-[85%]">
                                 {requests.length === 0 ? (
@@ -168,7 +182,6 @@ export default function NotificationsPage() {
                                                 key={request.requestId}
                                                 className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex justify-between items-center"
                                             >
-                                                {/* Left */}
                                                 <div className="flex items-center gap-4">
                                                     {request.roomImage && (
                                                         <img
@@ -190,7 +203,6 @@ export default function NotificationsPage() {
                                                     </div>
                                                 </div>
 
-                                                {/* Right (moved left) */}
                                                 <div className="flex gap-2 ml-6">
                                                     <button
                                                         onClick={() => handleRequestAction(request.requestId, "accept")}
@@ -216,6 +228,9 @@ export default function NotificationsPage() {
             </main>
 
             <Footer />
+
+            {/* Toast Container */}
+            <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
         </div>
     );
 }

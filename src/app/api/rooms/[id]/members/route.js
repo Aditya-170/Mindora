@@ -6,7 +6,7 @@ import User from "@/models/userModel";
 export async function GET(req, { params }) {
   try {
     await connectDB();
-    const { id } = await params; 
+    const { id } = await params;
 
     const room = await Room.findById(id).lean();
     if (!room) {
@@ -14,14 +14,25 @@ export async function GET(req, { params }) {
     }
 
     // Fetch owner details
-    const ownerUser = await User.findOne({ clerkId: room.owner }).lean();
+    const ownerUser = await User.findOne({ clerkId: room.createdBy }).lean();
+    const ownerClerkId = ownerUser?.clerkId || room.owner;
 
-    // Fetch members details
-    const members = await User.find({ clerkId: { $in: room.members } }).lean();
+    // Fetch members excluding the owner
+    const members = await User.find({
+      clerkId: { $in: room.members.filter((m) => m !== ownerClerkId) },
+    }).lean();
 
     return NextResponse.json(
       {
-        
+        owner: ownerUser
+          ? {
+              clerkId: ownerUser.clerkId,
+              name: `${ownerUser.firstName} ${ownerUser.lastName || ""}`.trim(),
+              email: ownerUser.email,
+              profileImage: ownerUser.profileImage,
+            }
+          : { clerkId: room.owner, name: "Unknown User" },
+
         members: members.map((m) => ({
           clerkId: m.clerkId,
           name: `${m.firstName} ${m.lastName || ""}`.trim(),
