@@ -5,36 +5,40 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import UserNavbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function MyRoomsPage() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user, isLoaded } = useUser(); 
+  const { user, isLoaded } = useUser();
 
   useEffect(() => {
-    if (!isLoaded || !user) return; // ✅ wait until Clerk is ready
-    // console.log("Fetching rooms for user:", user);
+    if (!isLoaded || !user) return; // Wait until Clerk is ready
+
     const fetchRooms = async () => {
       try {
         const res = await fetch(`/api/my-rooms?userId=${user.id}`);
         const data = await res.json();
+
         if (res.ok) {
           setRooms(data);
         } else {
-          console.error("Error fetching rooms:", data.error);
+          toast.error(data.error || "Failed to fetch rooms!", { style: { background: "red", color: "white" } });
         }
       } catch (err) {
         console.error("Error:", err);
+        toast.error(err.message || "Failed to fetch rooms!", { style: { background: "red", color: "white" } });
       } finally {
         setLoading(false);
       }
     };
 
     fetchRooms();
-  }, [isLoaded, user]); // ✅ run only when Clerk is ready
+  }, [isLoaded, user]);
 
   if (!isLoaded) {
-    return <p className="text-center mt-10">Loading user info...</p>; // ✅ safe fallback
+    return <p className="text-center mt-10">Loading user info...</p>;
   }
 
   if (loading) {
@@ -76,6 +80,9 @@ export default function MyRoomsPage() {
         )}
       </div>
       <Footer />
+
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
     </>
   );
 }

@@ -5,6 +5,8 @@ import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import UserNavbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function JoinedRoomPage() {
   const { user, isLoaded } = useUser();
@@ -18,12 +20,22 @@ export default function JoinedRoomPage() {
       try {
         const res = await fetch(`/api/rooms/joined?userId=${user.id}`);
         const data = await res.json();
+
         if (res.ok) {
           setRooms(data);
+          toast.success("Joined rooms loaded successfully!", {
+            style: { background: "black", color: "yellow" },
+          });
         } else {
+          toast.error(data.error || "Failed to fetch joined rooms!", {
+            style: { background: "red", color: "white" },
+          });
           console.error("Error fetching joined rooms:", data.error);
         }
       } catch (error) {
+        toast.error(error.message || "Failed to fetch joined rooms!", {
+          style: { background: "red", color: "white" },
+        });
         console.error("Error fetching joined rooms:", error);
       } finally {
         setLoading(false);
@@ -80,6 +92,9 @@ export default function JoinedRoomPage() {
         )}
       </div>
       <Footer />
+
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
     </>
   );
 }
