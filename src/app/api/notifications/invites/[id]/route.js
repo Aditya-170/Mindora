@@ -8,7 +8,7 @@ export async function PATCH(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = params; // inviteId
+    const { id } = await params; // inviteId
     const body = await req.json();
     const { action, userId } = body;
 
