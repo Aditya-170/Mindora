@@ -13,19 +13,26 @@ import UploadedImages from "@/components/roomFeatures/UploadedImages";
 import ShortNotes from "@/components/roomFeatures/ShortNotes";
 import InviteMembers from "@/components/roomFeatures/InviteMembers";
 import Members from "@/components/roomFeatures/Members";
+import QuizGenerator from "@/components/roomFeatures/GenerateQuiz";
+import AttemptQuiz from "@/components/roomFeatures/AttemptQuiz";
+import LeaderboardPageDummy from "@/components/roomFeatures/ShowLeaderboard";
+import Whiteboard from "@/components/roomFeatures/Whiteboard";
 const sidebarOptions = [
   "Members",
   "Invite Members",
   "Upload Notes",
   "Upload Image",
   "Add Links",
+  "Generate Quiz",
   "Uploaded Notes",
   "Uploaded Images",
   "Links",
   "Short Notes",
-  "Open Whiteboard",
-  "Create Quiz",
+  "Attempt Quiz",
   "Leaderboard",
+  "Announce To Room",
+  "Announcements",
+  "Whiteboard",
   "Meeting",
   "Chats",
 ];
@@ -40,16 +47,20 @@ export default function RoomFeaturesPage() {
   // console.log("Room ID from URL:", id);
 
   const componentsMap = {
-  "Members": <Members roomId={id} />,
-  "Upload Notes": <UploadNotes roomId={id} />,
-  "Invite Members": <InviteMembers roomId={id} />,
-  "Add Links": <UploadLink roomId={id} />,
-  "Upload Image": <UploadImage roomId={id} />,
-  "Uploaded Notes": <UploadedNotes roomId={id} />,
-  "Links": <UploadedLinks roomId={id} />,
-  "Uploaded Images": <UploadedImages roomId={id} />,
-  "Short Notes": <ShortNotes roomId={id} />
-};
+    "Members": <Members roomId={id} />,
+    "Upload Notes": <UploadNotes roomId={id} />,
+    "Invite Members": <InviteMembers roomId={id} />,
+    "Add Links": <UploadLink roomId={id} />,
+    "Upload Image": <UploadImage roomId={id} />,
+    "Uploaded Notes": <UploadedNotes roomId={id} />,
+    "Links": <UploadedLinks roomId={id} />,
+    "Uploaded Images": <UploadedImages roomId={id} />,
+    "Short Notes": <ShortNotes roomId={id} />,
+    "Generate Quiz": <QuizGenerator roomId={id} />,
+    "Attempt Quiz": <AttemptQuiz roomId={id} />,
+    "Leaderboard": <LeaderboardPageDummy roomId={id} />,
+    "Whiteboard": <Whiteboard roomId={id} />
+  };
 
   const handleSelect = (option, index) => {
     setSelected(option);
