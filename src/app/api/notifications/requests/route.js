@@ -1,9 +1,9 @@
 // src/app/api/notifications/requests/route.js
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-// import Request from "@/models/request";
 import roomModel from "@/models/roomModel";
 import joinRequest from "@/models/joinRequest";
+import userModel from "@/models/userModel"; // ✅ import your user model
 
 export async function GET(req) {
   try {
@@ -22,6 +22,10 @@ export async function GET(req) {
     const result = await Promise.all(
       requests.map(async (request) => {
         const room = await roomModel.findById(request.roomId);
+
+        // ✅ lookup the requesting user's email
+        const fromUser = await userModel.findOne({ clerkId: request.fromUserId });
+
         return {
           requestId: request._id,
           roomId: request.roomId,
@@ -29,6 +33,7 @@ export async function GET(req) {
           roomImage: room?.image,
           roomOwner: room?.owner,
           fromUserId: request.fromUserId,
+          fromUserEmail: fromUser?.email || "N/A", // ✅ include email
           status: request.status,
         };
       })

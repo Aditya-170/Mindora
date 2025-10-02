@@ -11,7 +11,8 @@ import UploadedNotes from "@/components/roomFeatures/UploadedNotes";
 import UploadedLinks from "@/components/roomFeatures/YoutubeLinks";
 import UploadedImages from "@/components/roomFeatures/UploadedImages";
 import ShortNotes from "@/components/roomFeatures/ShortNotes";
-import InviteMembers from "@/components/InviteMembers";
+import InviteMembers from "@/components/roomFeatures/InviteMembers";
+import Members from "@/components/roomFeatures/Members";
 const sidebarOptions = [
   "Members",
   "Invite Members",
@@ -39,15 +40,16 @@ export default function RoomFeaturesPage() {
   // console.log("Room ID from URL:", id);
 
   const componentsMap = {
-    "Upload Notes": <UploadNotes roomId={id} />,
-    "Invite Members": <InviteMembers roomId={id} />,
-    "Add Links": <UploadLink roomId={id} />,
-    "Upload Image": <UploadImage roomId={id} />,
-    "Uploaded Notes": <UploadedNotes roomId={id} />,
-    "Links": <UploadedLinks roomId={id} />,
-    "Uploaded Images": <UploadedImages roomId={id} />,
-    "Short Notes": <ShortNotes roomId={id} />
-  };
+  "Members": <Members roomId={id} />,
+  "Upload Notes": <UploadNotes roomId={id} />,
+  "Invite Members": <InviteMembers roomId={id} />,
+  "Add Links": <UploadLink roomId={id} />,
+  "Upload Image": <UploadImage roomId={id} />,
+  "Uploaded Notes": <UploadedNotes roomId={id} />,
+  "Links": <UploadedLinks roomId={id} />,
+  "Uploaded Images": <UploadedImages roomId={id} />,
+  "Short Notes": <ShortNotes roomId={id} />
+};
 
   const handleSelect = (option, index) => {
     setSelected(option);

@@ -1,26 +1,49 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Bell } from "lucide-react"; // bell icon
-
-// Clerk components
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { Bell } from "lucide-react";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 
 export default function UserNavbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [notifCount, setNotifCount] = useState(0);
+  const { user } = useUser();
 
-  // Explicit links with labels and paths
   const navLinks = [
     { label: "Home", href: "/" },
     { label: "Rooms", href: "/rooms" },
     { label: "Dashboard", href: "/dashboard" },
     { label: "Badges", href: "/badges" },
     { label: "Contact Us", href: "/contact-us" },
+    { label: "My-Rooms", href: "/my-rooms" },
+    { label: "Joined-Rooms", href: "/joined-rooms" },
   ];
 
+  // Fetch invites + requests count
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchNotifications = async () => {
+      try {
+        const [invitesRes, requestsRes] = await Promise.all([
+          fetch(`/api/notifications/invites?userId=${user.id}`),
+          fetch(`/api/notifications/requests?userId=${user.id}`),
+        ]);
+
+        const invites = invitesRes.ok ? await invitesRes.json() : [];
+        const requests = requestsRes.ok ? await requestsRes.json() : [];
+
+        setNotifCount(invites.length + requests.length);
+      } catch (err) {
+        console.error("Error fetching notifications:", err);
+      }
+    };
+
+    fetchNotifications();
+  }, [user]);
+
   return (
-    <nav className="bg-gray-900 text-white shadow-lg shadow-yellow-500/40 sticky top-0 z-50 transition-all duration-300">
+    <nav className="bg-gray-900 text-white shadow-lg shadow-yellow-500/40 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         <div className="flex justify-between items-center h-20">
           {/* Left: Logo */}
@@ -30,7 +53,7 @@ export default function UserNavbar() {
             </h1>
           </div>
 
-          {/* Center: Navigation Links */}
+          {/* Center: Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
               <a
@@ -44,15 +67,23 @@ export default function UserNavbar() {
             ))}
           </div>
 
-          {/* Right: Notification + Authentication */}
+          {/* Right: Notification + Auth */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Bell Icon only for signed-in users */}
             <SignedIn>
               <a
                 href="/notification"
-                className="p-2 rounded-full hover:bg-gray-800 transition-colors"
+                className="relative p-2 rounded-full hover:bg-gray-800 transition-colors"
               >
-                <Bell className="w-6 h-6 text-yellow-500 hover:text-yellow-400 transition-colors" />
+                <Bell
+                  className={`w-6 h-6 ${
+                    notifCount > 0 ? "text-yellow-400 animate-pulse" : "text-yellow-500"
+                  }`}
+                />
+                {notifCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full animate-bounce">
+                    {notifCount}
+                  </span>
+                )}
               </a>
             </SignedIn>
 
@@ -69,11 +100,11 @@ export default function UserNavbar() {
             </SignedIn>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile menu btn */}
           <div className="md:hidden flex items-center">
             <Button
               variant="ghost"
-              className="text-white hover:text-yellow-400 transition-all duration-300"
+              className="text-white hover:text-yellow-400"
               onClick={() => setIsOpen(!isOpen)}
             >
               <svg
@@ -84,19 +115,9 @@ export default function UserNavbar() {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 {isOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
             </Button>
@@ -104,43 +125,38 @@ export default function UserNavbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden bg-gray-800 border-t border-yellow-500 animate-slide-down">
+        <div className="md:hidden bg-gray-800 border-t border-yellow-500">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="block px-6 py-3 hover:bg-yellow-500 hover:text-white transition-all duration-300"
+              className="block px-6 py-3 hover:bg-yellow-500 hover:text-white"
             >
               {link.label}
             </a>
           ))}
 
-          {/* Mobile Notification only for signed-in users */}
+          {/* Notifications in mobile */}
           <SignedIn>
             <a
               href="/notification"
-              className="block px-6 py-3 flex items-center space-x-2 hover:bg-yellow-500 hover:text-white transition-all duration-300"
+              className="block px-6 py-3 flex items-center space-x-2 hover:bg-yellow-500 hover:text-white"
             >
-              <Bell className="w-5 h-5 text-yellow-400" />
+              <Bell
+                className={`w-5 h-5 ${
+                  notifCount > 0 ? "text-yellow-400 animate-pulse" : "text-yellow-500"
+                }`}
+              />
               <span>Notifications</span>
+              {notifCount > 0 && (
+                <span className="ml-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-bounce">
+                  {notifCount}
+                </span>
+              )}
             </a>
           </SignedIn>
-
-          {/* Mobile Auth Section */}
-          <div className="px-6 py-3">
-            <SignedIn>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
-            <SignedOut>
-              <a href="/sign-in">
-                <Button className="w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black font-semibold rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
-                  Sign In
-                </Button>
-              </a>
-            </SignedOut>
-          </div>
         </div>
       )}
     </nav>

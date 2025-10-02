@@ -10,17 +10,16 @@ export default function NotificationsPage() {
     const [invites, setInvites] = useState([]);
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState("invites"); // ✅ sliding option
 
     useEffect(() => {
         if (!user) return;
 
         const fetchData = async () => {
             try {
-                // Fetch Invitations
                 const inviteRes = await fetch(`/api/notifications/invites?userId=${user.id}`);
                 const inviteData = await inviteRes.json();
 
-                // Fetch Requests
                 const requestRes = await fetch(`/api/notifications/requests?userId=${user.id}`);
                 const requestData = await requestRes.json();
 
@@ -78,116 +77,140 @@ export default function NotificationsPage() {
                     Notifications
                 </h1>
 
+                {/* ✅ Sliding Tabs */}
+                <div className="flex justify-center mb-6 gap-6">
+                    <button
+                        onClick={() => setActiveTab("invites")}
+                        className={`px-6 py-2 rounded-lg font-semibold ${
+                            activeTab === "invites"
+                                ? "bg-yellow-400 text-black"
+                                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                        }`}
+                    >
+                        Room Invitations
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("requests")}
+                        className={`px-6 py-2 rounded-lg font-semibold ${
+                            activeTab === "requests"
+                                ? "bg-yellow-400 text-black"
+                                : "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                        }`}
+                    >
+                        Room Requests
+                    </button>
+                </div>
+
                 {loading ? (
                     <p className="text-center text-yellow-400 mt-10">Loading...</p>
                 ) : (
-                    <div className="flex flex-col gap-10">
+                    <div className="flex flex-col gap-10 items-center">
+                        {/* ✅ Invitations Section */}
+                        {activeTab === "invites" && (
+                            <section className="w-[85%]"> {/* 15% narrower */}
+                                {invites.length === 0 ? (
+                                    <p className="text-gray-300 text-center">No pending invitations.</p>
+                                ) : (
+                                    <div className="flex flex-col gap-6"> {/* larger spacing */}
+                                        {invites.map((invite) => (
+                                            <div
+                                                key={invite.inviteId}
+                                                className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex justify-between items-center"
+                                            >
+                                                {/* Left */}
+                                                <div className="flex items-center gap-4">
+                                                    {invite.roomImage && (
+                                                        <img
+                                                            src={invite.roomImage}
+                                                            alt={invite.roomName}
+                                                            className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
+                                                        />
+                                                    )}
+                                                    <div>
+                                                        <h2 className="text-lg font-semibold text-yellow-400">
+                                                            {invite.roomName}
+                                                        </h2>
+                                                        <p className="text-gray-300 text-sm">By {invite.roomOwner}</p>
+                                                    </div>
+                                                </div>
 
-                        {/* Invitations Section */}
-                        <section>
-                            <h2 className="text-2xl font-semibold text-yellow-300 mb-4">Room Invitations</h2>
-                            {invites.length === 0 ? (
-                                <p className="text-gray-300">No pending invitations.</p>
-                            ) : (
-                                <div className="flex flex-col gap-4">
-                                    {invites.map((invite) => (
-                                        <div
-                                            key={invite.inviteId}
-                                            className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex items-center justify-between"
-                                        >
-                                            {/* Left */}
-                                            <div className="flex items-center gap-4">
-                                                {invite.roomImage && (
-                                                    <img
-                                                        src={invite.roomImage}
-                                                        alt={invite.roomName}
-                                                        className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
-                                                    />
-                                                )}
-                                                <div>
-                                                    <h2 className="text-lg font-semibold text-yellow-400">
-                                                        {invite.roomName}
-                                                    </h2>
-                                                    <p className="text-gray-300 text-sm">By {invite.roomOwner}</p>
+                                                {/* Right (moved left) */}
+                                                <div className="flex gap-2 ml-6">
+                                                    <button
+                                                        onClick={() => handleInviteAction(invite.inviteId, "accept")}
+                                                        className="bg-green-400 hover:bg-green-500 text-black font-semibold px-4 py-1 rounded-lg"
+                                                    >
+                                                        Accept
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleInviteAction(invite.inviteId, "reject")}
+                                                        className="bg-gray-700 hover:bg-red-500 text-white font-semibold px-4 py-1 rounded-lg"
+                                                    >
+                                                        Reject
+                                                    </button>
                                                 </div>
                                             </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </section>
+                        )}
 
-                                            {/* Right */}
-                                            <div className="flex gap-3">
-                                                <button
-                                                    onClick={() => handleInviteAction(invite.inviteId, "accept")}
-                                                    className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-4 py-1 rounded-lg"
-                                                >
-                                                    Accept
-                                                </button>
-                                                <button
-                                                    onClick={() => handleInviteAction(invite.inviteId, "reject")}
-                                                    className="bg-gray-700 hover:bg-red-500 text-white font-semibold px-4 py-1 rounded-lg"
-                                                >
-                                                    Reject
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </section>
+                        {/* ✅ Requests Section */}
+                        {activeTab === "requests" && (
+                            <section className="w-[85%]">
+                                {requests.length === 0 ? (
+                                    <p className="text-gray-300 text-center">No pending requests.</p>
+                                ) : (
+                                    <div className="flex flex-col gap-6">
+                                        {requests.map((request) => (
+                                            <div
+                                                key={request.requestId}
+                                                className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex justify-between items-center"
+                                            >
+                                                {/* Left */}
+                                                <div className="flex items-center gap-4">
+                                                    {request.roomImage && (
+                                                        <img
+                                                            src={request.roomImage}
+                                                            alt={request.roomName}
+                                                            className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
+                                                        />
+                                                    )}
+                                                    <div>
+                                                        <h2 className="text-lg font-semibold text-yellow-400">
+                                                            {request.roomName}
+                                                        </h2>
+                                                        <p className="text-gray-300 text-sm">
+                                                            Owner: {request.roomOwner}
+                                                        </p>
+                                                        <p className="text-gray-400 text-sm italic">
+                                                            Requested by: {request.fromUserEmail}
+                                                        </p>
+                                                    </div>
+                                                </div>
 
-                        {/* Requests Section */}
-                        <section>
-                            <h2 className="text-2xl font-semibold text-yellow-300 mb-4">Room Requests</h2>
-                            {requests.length === 0 ? (
-                                <p className="text-gray-300">No pending requests.</p>
-                            ) : (
-                                <div className="flex flex-col gap-4">
-                                    {requests.map((request) => (
-                                        <div
-                                            key={request.requestId}
-                                            className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex items-center justify-between"
-                                        >
-                                            {/* Left */}
-                                            <div className="flex items-center gap-4">
-                                                {request.roomImage && (
-                                                    <img
-                                                        src={request.roomImage}
-                                                        alt={request.roomName}
-                                                        className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
-                                                    />
-                                                )}
-                                                <div>
-                                                    <h2 className="text-lg font-semibold text-yellow-400">
-                                                        {request.roomName}
-                                                    </h2>
-                                                    <p className="text-gray-300 text-sm">
-                                                        Owner: {request.roomOwner}
-                                                    </p>
-                                                    <p className="text-gray-400 text-sm italic">
-                                                        Requested by: {request.userName}
-                                                    </p>
+                                                {/* Right (moved left) */}
+                                                <div className="flex gap-2 ml-6">
+                                                    <button
+                                                        onClick={() => handleRequestAction(request.requestId, "accept")}
+                                                        className="bg-green-400 hover:bg-green-500 text-black font-semibold px-4 py-1 rounded-lg"
+                                                    >
+                                                        Accept
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleRequestAction(request.requestId, "reject")}
+                                                        className="bg-gray-700 hover:bg-red-500 text-white font-semibold px-4 py-1 rounded-lg"
+                                                    >
+                                                        Reject
+                                                    </button>
                                                 </div>
                                             </div>
-
-                                            {/* Right */}
-                                            <div className="flex gap-3">
-                                                <button
-                                                    onClick={() => handleRequestAction(request.requestId, "accept")}
-                                                    className="bg-green-400 hover:bg-green-500 text-black font-semibold px-4 py-1 rounded-lg"
-                                                >
-                                                    Accept
-                                                </button>
-                                                <button
-                                                    onClick={() => handleRequestAction(request.requestId, "reject")}
-                                                    className="bg-gray-700 hover:bg-red-500 text-white font-semibold px-4 py-1 rounded-lg"
-                                                >
-                                                    Reject
-                                                </button>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </section>
-
+                                        ))}
+                                    </div>
+                                )}
+                            </section>
+                        )}
                     </div>
                 )}
             </main>

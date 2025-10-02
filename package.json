@@ -29,6 +29,7 @@
     "lucide-react": "^0.544.0",
     "mongoose": "^8.18.3",
     "next": "15.5.4",
+    "nodemailer": "^7.0.6",
     "pdf-parse": "^1.1.1",
     "pdfjs-dist": "^5.1.91",
     "react": "19.1.0",
