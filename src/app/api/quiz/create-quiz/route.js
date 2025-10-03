@@ -2,7 +2,6 @@
 import axios from "axios";
 import { RoomQuizzes } from "@/models/quizModel";
 
-
 // Utility to call Gemini
 async function callGemini(prompt) {
   const res = await axios.post(
@@ -42,7 +41,7 @@ export async function POST(req) {
       roomId,
       createdBy,
     } = await req.json();
-    console.log("pdfurl" , pdfUrl);
+    console.log("pdfurl", pdfUrl);
     if (!pdfUrl || !topic || !title || !roomId || !createdBy) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),
@@ -51,9 +50,12 @@ export async function POST(req) {
     }
 
     // 1️⃣ Extract text from PDF
-    const extractRes = await axios.post("http://localhost:5000/extract-pdf", {
-      url: pdfUrl,
-    });
+    const extractRes = await axios.post(
+      `${process.env.FLASK_URL}/extract-pdf`,
+      {
+        url: pdfUrl,
+      }
+    );
     const text = extractRes.data?.text;
     if (!text) {
       return new Response(

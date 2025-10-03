@@ -26,7 +26,6 @@ import ChatWidget from "@/components/roomFeatures/Chats";
 const sidebarOptions = [
   "Members",
   "Invite Members",
-  "Voice Call",
   "Upload Notes",
   "Upload Image",
   "Add Links",
@@ -37,10 +36,10 @@ const sidebarOptions = [
   "Short Notes",
   "Attempt Quiz",
   "Leaderboard",
+  "Voice Call",
+  "Whiteboard",
   "Announce To Room",
   "Announcements",
-  "Whiteboard",
-  "Meeting",
 ];
 
 

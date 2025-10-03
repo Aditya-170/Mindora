@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
       try {
         // Call Gemini API (example using Axios)
         const geminiResponse = await axios.post(
-          "http://localhost:3000/api/gemini-ans-for-chat",
+          `${process.env.NEXTJS_URL}/api/gemini-ans-for-chat`,
           {
             question: message, // send the whole message or extract after @
           }
