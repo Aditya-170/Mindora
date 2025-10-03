@@ -19,6 +19,10 @@ import LeaderboardPageDummy from "@/components/roomFeatures/ShowLeaderboard";
 import Whiteboard from "@/components/roomFeatures/Whiteboard";
 import { useUser } from "@clerk/nextjs";
 import VoiceChannel from "@/components/roomFeatures/VoiceChannel";
+import AnnouncementsPage from "@/components/roomFeatures/Announcements";
+import UploadAnnouncement from "@/components/roomFeatures/AnnounceToRoom";
+import ChatWidget from "@/components/roomFeatures/Chats";
+
 const sidebarOptions = [
   "Members",
   "Invite Members",
@@ -37,7 +41,6 @@ const sidebarOptions = [
   "Announcements",
   "Whiteboard",
   "Meeting",
-  "Chats",
 ];
 
 
@@ -47,8 +50,9 @@ export default function RoomFeaturesPage() {
   const buttonRefs = useRef([]);
   const params = useParams();
   const id = params.id;
-  const {user}=useUser();
+  const { user } = useUser();
   const userId = user ? user.id : null;
+  const firstName = user?.firstName;
   // console.log("Room ID from URL:", id);
 
   const componentsMap = {
@@ -65,7 +69,9 @@ export default function RoomFeaturesPage() {
     "Generate Quiz": <QuizGenerator roomId={id} />,
     "Attempt Quiz": <AttemptQuiz roomId={id} />,
     "Leaderboard": <LeaderboardPageDummy roomId={id} />,
-    "Whiteboard": <Whiteboard roomId={id} />
+    "Whiteboard": <Whiteboard roomId={id} />,
+    "Announcements": <AnnouncementsPage roomId={id} />,
+    "Announce To Room": <UploadAnnouncement roomId={id} />
   };
 
   const handleSelect = (option, index) => {
@@ -144,6 +150,7 @@ export default function RoomFeaturesPage() {
       </div>
 
       <Footer />
+      <ChatWidget roomId={id} userName={firstName} />
     </div>
   );
 }
