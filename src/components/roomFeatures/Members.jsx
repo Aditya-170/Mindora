@@ -4,7 +4,7 @@ import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // ✅ Import toast
 
-export default function Members({ roomId, onInvite }) {
+export default function Members({ roomId }) {
   const [members, setMembers] = useState([]);
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -81,12 +81,6 @@ export default function Members({ roomId, onInvite }) {
       <h2 className="text-xl font-bold text-yellow-400 mb-4 flex justify-between items-center">
         Members
         <div className="space-x-2">
-          <button
-            onClick={onInvite}
-            className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
-          >
-            Add Member
-          </button>
 
           {owner?.clerkId === user?.id && (
             <button

@@ -25,6 +25,10 @@ const roomSchema = new mongoose.Schema(
 
     // Messages & shared resources
     messages: [messageSchema],
+
+    // 🔊 Voice chat fields
+    voiceActive: { type: Boolean, default: false },
+    voiceHost: { type: String, default: null }, // Clerk userId of host
   },
   { timestamps: true }
 );

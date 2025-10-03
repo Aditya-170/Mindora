@@ -8,7 +8,7 @@ export async function PATCH(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params; // inviteId
+    const { id } = params; // inviteId
     const body = await req.json();
     const { action, userId } = body;
 
@@ -24,10 +24,18 @@ export async function PATCH(req, { params }) {
     if (action === "accept") {
       invite.status = "accepted";
 
-      // Add user to room members
-      await roomModel.findByIdAndUpdate(invite.roomId, {
-        $addToSet: { members: userId },
-      });
+      // Find the room first
+      const room = await roomModel.findById(invite.roomId);
+      if (!room) {
+        return NextResponse.json({ error: "Room not found" }, { status: 404 });
+      }
+
+      // Add member only if not already present
+      if (!room.members.includes(userId)) {
+        room.members.push(userId);
+        room.currentMembers = room.currentMembers + 1;
+        await room.save();
+      }
     } else if (action === "reject") {
       invite.status = "rejected";
     }
