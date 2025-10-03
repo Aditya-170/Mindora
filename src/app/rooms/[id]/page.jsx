@@ -17,9 +17,12 @@ import QuizGenerator from "@/components/roomFeatures/GenerateQuiz";
 import AttemptQuiz from "@/components/roomFeatures/AttemptQuiz";
 import LeaderboardPageDummy from "@/components/roomFeatures/ShowLeaderboard";
 import Whiteboard from "@/components/roomFeatures/Whiteboard";
+import { useUser } from "@clerk/nextjs";
+import VoiceChannel from "@/components/roomFeatures/VoiceChannel";
 const sidebarOptions = [
   "Members",
   "Invite Members",
+  "Voice Call",
   "Upload Notes",
   "Upload Image",
   "Add Links",
@@ -44,12 +47,15 @@ export default function RoomFeaturesPage() {
   const buttonRefs = useRef([]);
   const params = useParams();
   const id = params.id;
+  const {user}=useUser();
+  const userId = user ? user.id : null;
   // console.log("Room ID from URL:", id);
 
   const componentsMap = {
     "Members": <Members roomId={id} />,
     "Upload Notes": <UploadNotes roomId={id} />,
     "Invite Members": <InviteMembers roomId={id} />,
+    "Voice Call": <VoiceChannel roomId={id} userId={userId} />,
     "Add Links": <UploadLink roomId={id} />,
     "Upload Image": <UploadImage roomId={id} />,
     "Uploaded Notes": <UploadedNotes roomId={id} />,

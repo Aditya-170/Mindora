@@ -8,7 +8,7 @@ export async function PATCH(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params; // requestId
+    const { id } = params; // requestId
     const body = await req.json();
     const { action, userId } = body;
 
@@ -17,7 +17,7 @@ export async function PATCH(req, { params }) {
       return NextResponse.json({ error: "Request not found" }, { status: 404 });
     }
 
-    // Ensure only owner can handle
+    // Ensure only owner can handle the request
     if (request.toOwnerId !== userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
     }
@@ -25,10 +25,17 @@ export async function PATCH(req, { params }) {
     if (action === "accept") {
       request.status = "accepted";
 
-      // Add requesting user to room
-      await roomModel.findByIdAndUpdate(request.roomId, {
-        $addToSet: { members: request.fromUserId },
-      });
+      const room = await roomModel.findById(request.roomId);
+      if (!room) {
+        return NextResponse.json({ error: "Room not found" }, { status: 404 });
+      }
+
+      // Add member only if not already present
+      if (!room.members.includes(request.fromUserId)) {
+        room.members.push(request.fromUserId);
+        room.currentMembers = room.currentMembers + 1;
+        await room.save();
+      }
     } else if (action === "reject") {
       request.status = "rejected";
     }
