@@ -35,20 +35,32 @@ const Whiteboard = ({ roomId }) => {
         socketRef.current = io("https://mindora-2.onrender.com");
         const socket = socketRef.current;
 
-        if (roomId) {
-            socketRef.current.emit("join-room", roomId);
+        if (roomId && user) {
+            // Send an object with roomId and userName
+            socket.emit("join-room", {
+                roomId,
+                userName: user.fullName || user.username || "Anonymous"
+            });
         }
 
-        socketRef.current.on("draw-action", ({ type, data }) => {
+        socket.on("draw-action", ({ type, data }) => {
             if (type === "line") setLines(prev => [...prev, data]);
             else if (type === "shape") setShapes(prev => [...prev, data]);
             else if (type === "text") setTexts(prev => [...prev, data]);
         });
 
+        socket.on("cursor-move", ({ userId, name, x, y }) => {
+            setCursors((prev) => ({
+                ...prev,
+                [userId]: { x, y, name },
+            }));
+        });
+
         return () => {
-            socketRef.current.disconnect();
+            socket.disconnect();
         };
-    }, [roomId]);
+    }, [roomId, user]);
+
 
 
     const handleMouseDown = (e) => {
