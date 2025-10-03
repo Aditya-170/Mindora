@@ -71,7 +71,7 @@ export default function UploadedImages({ roomId }) {
             <img
               src={selectedImage.url}
               alt={selectedImage.topic}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover bg-white"
             />
           </div>
         </div>
@@ -109,7 +109,7 @@ export default function UploadedImages({ roomId }) {
                   <img
                     src={img.url}
                     alt={img.topic}
-                    className="w-full h-48 object-cover"
+                    className="w-full h-48 object-cover bg-white"
                   />
                   <button
                     onClick={() => setSelectedImage(img)}
