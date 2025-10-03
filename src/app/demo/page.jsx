@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-
+import Spinner from "@/components/Spinner";
 export default function ExtractAndSummarize() {
   const [url, setUrl] = useState("");
   const [extractedText, setExtractedText] = useState("");
@@ -17,7 +17,7 @@ export default function ExtractAndSummarize() {
 
     try {
       // 1️⃣ Call Flask API to extract text
-      const resText = await fetch("http://localhost:5000/extract-pdf", {
+      const resText = await fetch(`${process.env.FLASK_URL}/extract-pdf`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
@@ -58,7 +58,7 @@ export default function ExtractAndSummarize() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">PDF to Short Notes</h1>
-
+      <Spinner size={80} /> {/* You can change size */}
       <div className="flex gap-2">
         <input
           type="text"

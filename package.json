@@ -31,6 +31,7 @@
     "formidable": "^3.5.4",
     "formidable-serverless": "^1.1.1",
     "framer-motion": "^12.23.22",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.544.0",
     "mongoose": "^8.18.3",
     "next": "15.5.4",

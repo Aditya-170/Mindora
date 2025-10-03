@@ -15,7 +15,7 @@ export async function POST(req) {
     }
     console.log("step1");
     // 1️⃣ Call Flask server to extract text
-    const extractRes = await axios.post("http://localhost:5000/extract-pdf", {
+    const extractRes = await axios.post(`${process.env.FLASK_URL}/extract-pdf`, {
       url: pdfUrl,
     });
     if (!extractRes.data?.text) {
@@ -28,7 +28,7 @@ export async function POST(req) {
     console.log("step2");
     // 2️⃣ Call summary API (Gemini-based)
     const summaryRes = await axios.post(
-      "http://localhost:3000/api/extract-short-notes",
+      `${process.env.NEXTJS_URL}/api/extract-short-notes`,
       { text: extractedText }
     );
     if (!summaryRes.data?.finalSummary) {
@@ -41,7 +41,7 @@ export async function POST(req) {
     console.log("step3");
     // 3️⃣ Save to DB via existing short-notes/upload API
     try {
-      await axios.post("http://localhost:3000/api/short-notes/upload", {
+       await axios.post(`${process.env.NEXTJS_URL}/api/short-notes/upload`, {
         roomId,
         topic,
         shortNotes,
