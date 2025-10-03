@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function UserNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +14,7 @@ export default function UserNavbar() {
     { label: "Home", href: "/" },
     { label: "Rooms", href: "/rooms" },
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Badges", href: "/badges" },
-    { label: "Contact Us", href: "/contact-us" },
+    { label: "Contact Us", href: "/contact" },
     { label: "My-Rooms", href: "/my-rooms" },
     { label: "Joined-Rooms", href: "/joined-rooms" },
   ];
@@ -47,12 +47,13 @@ export default function UserNavbar() {
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
         <div className="flex justify-between items-center h-20">
           {/* Left: Logo */}
+          <Link href="/">
           <div className="flex items-center space-x-4">
             <h1 className="text-3xl sm:text-4xl font-bold text-yellow-500 cursor-pointer hover:text-yellow-400 transition-all duration-300">
               Mindora
             </h1>
           </div>
-
+          </Link>
           {/* Center: Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (

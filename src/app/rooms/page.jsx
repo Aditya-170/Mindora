@@ -24,17 +24,22 @@ export default function RoomsPage() {
 
   useEffect(() => {
     const fetchRooms = async () => {
+      if (!user) return;
+
       try {
-        const res = await fetch("/api/rooms");
+        const res = await fetch(`/api/rooms?userId=${user.id}`);
         const data = await res.json();
+
         setRooms(data.filter((room) => room.currentMembers < room.maxMembers));
       } catch (err) {
         console.error(err);
-        toast.error("Failed to fetch rooms!", { style: { background: "red", color: "white" } });
+        toast.error("Failed to fetch rooms!", {
+          style: { background: "red", color: "white" },
+        });
       }
     };
     fetchRooms();
-  }, []);
+  }, [user]);
 
   // Handle image upload to Cloudinary
   const handleImageUpload = async (file) => {

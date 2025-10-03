@@ -1,27 +1,29 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import ChatWidget from "@/components/roomFeatures/Chats";
+import Members from "@/components/roomFeatures/Members";
 import UploadNotes from "@/components/roomFeatures/UploadNotes";
+import InviteMembers from "@/components/roomFeatures/InviteMembers";
+import VoiceChannel from "@/components/roomFeatures/VoiceChannel";
 import UploadLink from "@/components/roomFeatures/AddYoutubeLinks";
 import UploadImage from "@/components/roomFeatures/UploadImages";
 import UploadedNotes from "@/components/roomFeatures/UploadedNotes";
 import UploadedLinks from "@/components/roomFeatures/YoutubeLinks";
 import UploadedImages from "@/components/roomFeatures/UploadedImages";
 import ShortNotes from "@/components/roomFeatures/ShortNotes";
-import InviteMembers from "@/components/roomFeatures/InviteMembers";
-import Members from "@/components/roomFeatures/Members";
 import QuizGenerator from "@/components/roomFeatures/GenerateQuiz";
 import AttemptQuiz from "@/components/roomFeatures/AttemptQuiz";
-import LeaderboardPageDummy from "@/components/roomFeatures/ShowLeaderboard";
 import Whiteboard from "@/components/roomFeatures/Whiteboard";
-import { useUser } from "@clerk/nextjs";
-import VoiceChannel from "@/components/roomFeatures/VoiceChannel";
+import LeaderboardPageDummy from "@/components/roomFeatures/ShowLeaderboard";
 import AnnouncementsPage from "@/components/roomFeatures/Announcements";
 import UploadAnnouncement from "@/components/roomFeatures/AnnounceToRoom";
-import ChatWidget from "@/components/roomFeatures/Chats";
+
+// all your imports (UploadNotes, InviteMembers, etc)
 
 const sidebarOptions = [
   "Members",
@@ -42,9 +44,9 @@ const sidebarOptions = [
   "Announcements",
 ];
 
-
 export default function RoomFeaturesPage() {
   const [selected, setSelected] = useState(sidebarOptions[0]);
+  const [roomData, setRoomData] = useState(null);
   const sidebarRef = useRef(null);
   const buttonRefs = useRef([]);
   const params = useParams();
@@ -52,7 +54,22 @@ export default function RoomFeaturesPage() {
   const { user } = useUser();
   const userId = user ? user.id : null;
   const firstName = user?.firstName;
-  // console.log("Room ID from URL:", id);
+
+  // Fetch room details
+  useEffect(() => {
+    const fetchRoom = async () => {
+      try {
+        const res = await fetch(`/api/rooms/${id}/detail`);
+        const data = await res.json();
+        if (!data.error) {
+          setRoomData(data);
+        }
+      } catch (err) {
+        console.error("Error fetching room:", err);
+      }
+    };
+    fetchRoom();
+  }, [id]);
 
   const componentsMap = {
     "Members": <Members roomId={id} />,
@@ -70,7 +87,7 @@ export default function RoomFeaturesPage() {
     "Leaderboard": <LeaderboardPageDummy roomId={id} />,
     "Whiteboard": <Whiteboard roomId={id} />,
     "Announcements": <AnnouncementsPage roomId={id} />,
-    "Announce To Room": <UploadAnnouncement roomId={id} />
+    "Announce To Room": <UploadAnnouncement roomId={id} />,
   };
 
   const handleSelect = (option, index) => {
@@ -96,7 +113,9 @@ export default function RoomFeaturesPage() {
           ref={sidebarRef}
           className="w-64 flex flex-col h-[calc(100vh-96px)] bg-zinc-900 border-r border-yellow-500/20 p-4 rounded-xl"
         >
-          <h2 className="text-lg text-center font-bold text-white mb-8">Options</h2>
+          <h2 className="text-lg text-center font-bold text-white mb-8">
+            Options
+          </h2>
           <div className="flex-1 flex flex-col overflow-y-auto pr-2 space-y-2">
             {sidebarOptions.map((option, i) => (
               <motion.button
@@ -106,8 +125,11 @@ export default function RoomFeaturesPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.03 }}
-                className={`w-full px-3 py-2 rounded-lg mt-2 font-medium text-left transition-colors duration-200 ${selected === option ? "bg-yellow-500 text-black" : "hover:bg-yellow-500/10"
-                  }`}
+                className={`w-full px-3 py-2 rounded-lg mt-2 font-medium text-left transition-colors duration-200 ${
+                  selected === option
+                    ? "bg-yellow-500 text-black"
+                    : "hover:bg-yellow-500/10"
+                }`}
               >
                 {option}
               </motion.button>
@@ -119,9 +141,17 @@ export default function RoomFeaturesPage() {
         <main className="flex-1 flex flex-col min-h-0 overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between bg-zinc-800 rounded-lg p-4 mb-4 border border-yellow-500/20">
-            <img src="/globe.svg" alt={selected} className="w-12 h-12 object-cover rounded-full" />
-            <h2 className="text-xl font-bold text-yellow-400">MPMC CLASS</h2>
-            <span className="text-sm text-gray-400">By Jayendra Taklu</span>
+            <img
+              src={roomData?.image || "/globe.svg"}
+              alt={roomData?.name || "Room"}
+              className="w-12 h-12 object-cover rounded-full"
+            />
+            <h2 className="text-xl font-bold text-yellow-400">
+              {roomData?.name || "Loading..."}
+            </h2>
+            <span className="text-sm text-gray-400">
+              By {roomData?.owner || "Unknown"}
+            </span>
           </div>
 
           {/* Animated Feature Area */}
@@ -138,7 +168,9 @@ export default function RoomFeaturesPage() {
                 {componentsMap[selected] || (
                   <div className="flex-1 flex items-center justify-center text-yellow-100/90">
                     <p className="text-lg text-center">
-                      This section <span className="font-semibold">{selected}</span> is under construction.
+                      This section{" "}
+                      <span className="font-semibold">{selected}</span> is under
+                      construction.
                     </p>
                   </div>
                 )}
