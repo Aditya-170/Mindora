@@ -58,7 +58,7 @@ const LandingPage = () => {
             Anytime, Anywhere
           </motion.h1>
           <motion.p
-            className="text-lg text-yellow-200"
+            className="text-lg text-yellow-200 ml-3"
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 0.3 }}

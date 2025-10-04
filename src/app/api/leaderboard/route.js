@@ -29,30 +29,30 @@ export async function POST(req) {
           },
         ],
       });
-      console.log("checking the first time entry" , roomLeaderboard);
+      // console.log("checking the first time entry" , roomLeaderboard);
     } else {
       // ✅ Room already exists → check for quiz
       let quiz = roomLeaderboard.quizzes.find((q) => q.quizId.toString() === quizId);
-      console.log("checl for quiz existing" , quiz);
+      // console.log("checl for quiz existing" , quiz);
       if (!quiz) {
         // ✅ First time this quiz is added
         roomLeaderboard.quizzes.push({
           quizId,
           users: [{ clerkId, totalScore: score }],
         });
-        console.log("checking if the user actually exist or not")
+        // console.log("checking if the user actually exist or not")
       } else {
         // ✅ Quiz exists → check for user
         let user = quiz.users.find((u) => u.clerkId === clerkId);
-        console.log("user check for first time" , user);
+        // console.log("user check for first time" , user);
         if (!user) {
           // ✅ First attempt for this user
           quiz.users.push({ clerkId, totalScore: score });
-          console.log("checking if it is creating a new user or not")
+          // console.log("checking if it is creating a new user or not")
         } else {
           // ✅ Update score (overwrite latest)
           user.totalScore = score;
-          console.log("consoling to check whether it is updating or not");
+          // console.log("consoling to check whether it is updating or not");
         }
       }
     }

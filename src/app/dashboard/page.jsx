@@ -17,7 +17,7 @@ import {
 import UserNavbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Spinner from "@/components/Spinner";
-import { Mail, UserPlus, Users } from "lucide-react"; // ✅ optional icons
+import { Mail, UserPlus, Users } from "lucide-react";
 
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
@@ -50,7 +50,10 @@ export default function DashboardPage() {
     fetchData();
   }, [userId]);
 
-  const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const monthNames = [
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec"
+  ];
 
   const createdData = stats.createdPerMonth.map((d) => ({
     month: monthNames[d._id - 1],
@@ -67,78 +70,77 @@ export default function DashboardPage() {
   return (
     <>
       <UserNavbar />
-      <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-blue-100 p-8">
-        <h1 className="text-3xl font-bold text-center text-blue-700 mb-10">
+      {/* Changed background to black */}
+      <div className="min-h-screen bg-black p-8 text-yellow-300">
+        <h1 className="text-3xl font-bold text-center text-yellow-300 mb-10">
           📊 Dashboard
         </h1>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {/* Rooms Created */}
-          <div className="bg-white shadow-lg rounded-xl p-6 text-center border-2 border-yellow-400">
-            <h2 className="text-lg font-semibold text-gray-700 flex justify-center items-center gap-2">
-              <Users className="text-blue-600" /> Rooms Created
+          <div className="bg-gray-900 shadow-lg rounded-xl p-6 text-center border-2 border-yellow-400 hover:scale-105 transition-transform">
+            <h2 className="text-lg font-semibold flex justify-center items-center gap-2 text-yellow-100">
+              <Users className="text-yellow-400" /> Rooms Created
             </h2>
-            <p className="text-3xl font-bold text-blue-600">{stats.totalCreated}</p>
+            <p className="text-3xl font-bold text-yellow-300">{stats.totalCreated}</p>
           </div>
 
-          {/* Rooms Joined */}
-          <div className="bg-white shadow-lg rounded-xl p-6 text-center border-2 border-yellow-400">
-            <h2 className="text-lg font-semibold text-gray-700 flex justify-center items-center gap-2">
-              <UserPlus className="text-yellow-500" /> Rooms Joined
+          <div className="bg-gray-900 shadow-lg rounded-xl p-6 text-center border-2 border-yellow-400 hover:scale-105 transition-transform">
+            <h2 className="text-lg font-semibold flex justify-center items-center gap-2 text-yellow-100">
+              <UserPlus className="text-yellow-400" /> Rooms Joined
             </h2>
-            <p className="text-3xl font-bold text-yellow-600">{stats.totalJoined}</p>
+            <p className="text-3xl font-bold text-yellow-300">{stats.totalJoined}</p>
           </div>
 
-          {/* Room Requests */}
-          <div className="bg-white shadow-lg rounded-xl p-6 text-center border-2 border-blue-400">
-            <h2 className="text-lg font-semibold text-gray-700 flex justify-center items-center gap-2">
-              <Mail className="text-blue-600" /> Room Requests
+          <div className="bg-gray-900 shadow-lg rounded-xl p-6 text-center border-2 border-yellow-400 hover:scale-105 transition-transform">
+            <h2 className="text-lg font-semibold flex justify-center items-center gap-2 text-yellow-100">
+              <Mail className="text-yellow-400" /> Room Requests
             </h2>
-            <p className="text-3xl font-bold text-blue-600">{stats.totalRequests}</p>
+            <p className="text-3xl font-bold text-yellow-300">{stats.totalRequests}</p>
           </div>
 
-          {/* Invitations */}
-          <div className="bg-white shadow-lg rounded-xl p-6 text-center border-2 border-yellow-400">
-            <h2 className="text-lg font-semibold text-gray-700 flex justify-center items-center gap-2">
-              <Mail className="text-yellow-500" /> Invitations
+          <div className="bg-gray-900 shadow-lg rounded-xl p-6 text-center border-2 border-yellow-400 hover:scale-105 transition-transform">
+            <h2 className="text-lg font-semibold flex justify-center items-center gap-2 text-yellow-100">
+              <Mail className="text-yellow-400" /> Invitations
             </h2>
-            <p className="text-3xl font-bold text-yellow-600">{stats.totalInvitations}</p>
+            <p className="text-3xl font-bold text-yellow-300">{stats.totalInvitations}</p>
           </div>
         </div>
 
         {/* Charts */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Line Chart */}
-          <div className="bg-white shadow-lg rounded-xl p-6 border-2 border-blue-400">
-            <h2 className="text-lg font-semibold text-center text-gray-700 mb-4">
+          <div className="bg-gray-900 shadow-lg rounded-xl p-6 border-2 border-yellow-400">
+            <h2 className="text-lg font-semibold text-center text-yellow-100 mb-4">
               Rooms Created Per Month
             </h2>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={createdData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
+                <XAxis dataKey="month" stroke="#facc15" />
+                <YAxis stroke="#facc15" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: "#000", color: "#fde047" }}
+                />
                 <Legend />
-                <Line type="monotone" dataKey="rooms" stroke="#2563eb" strokeWidth={3} />
+                <Line type="monotone" dataKey="rooms" stroke="#fde047" strokeWidth={3} />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Bar Chart */}
-          <div className="bg-white shadow-lg rounded-xl p-6 border-2 border-yellow-400">
-            <h2 className="text-lg font-semibold text-center text-gray-700 mb-4">
+          <div className="bg-gray-900 shadow-lg rounded-xl p-6 border-2 border-yellow-400">
+            <h2 className="text-lg font-semibold text-center text-yellow-100 mb-4">
               Rooms Joined Per Month
             </h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={joinedData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
+                <CartesianGrid strokeDasharray="3 3" stroke="#475569" />
+                <XAxis dataKey="month" stroke="#facc15" />
+                <YAxis stroke="#facc15" />
+                <Tooltip
+                  contentStyle={{ backgroundColor: "#000", color: "#fde047" }}
+                />
                 <Legend />
-                <Bar dataKey="rooms" fill="#facc15" />
+                <Bar dataKey="rooms" fill="#fde047" />
               </BarChart>
             </ResponsiveContainer>
           </div>

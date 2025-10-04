@@ -227,34 +227,41 @@ export default function RoomsPage() {
         )}
 
         {/* Rooms List */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {rooms?.map((room) => (
-            <div
-              key={room._id}
-              className="bg-[#1a1a2e] rounded-2xl p-5 shadow-lg border border-yellow-500/20"
-            >
-              {room.image && (
-                <img
-                  src={room.image}
-                  alt={room.name}
-                  className="w-full h-32 object-cover rounded-xl mb-3"
-                />
-              )}
-              <h2 className="text-xl text-yellow-400 font-semibold">{room.name}</h2>
-              <p className="text-sm text-gray-400">By {room.owner}</p>
-              <p className="text-gray-300 mt-1 text-sm">{room.description}</p>
-              <p className="text-xs text-gray-400 mt-2">
-                Members: {room.currentMembers}/{room.maxMembers}
-              </p>
-              <button
-                onClick={() => handleJoinRequest(room._id)}
-                className="mt-4 w-full py-2 rounded-lg font-semibold bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition"
-              >
-                Ask to Join
-              </button>
-            </div>
-          ))}
+        {/* Rooms List */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  {rooms?.map((room) => (
+    <div
+      key={room._id}
+      className="bg-[#1a1a2e] rounded-2xl p-4 shadow-lg border border-yellow-500/20 max-w-sm mx-auto"
+    >
+      {room.image && (
+        <div className="w-full h-40 flex items-center justify-center bg-gray-900 rounded-xl mb-3 overflow-hidden">
+          <img
+            src={room.image}
+            alt={room.name}
+            className="w-full h-full object-cover"
+          />
         </div>
+      )}
+      <h2 className="text-lg text-yellow-400 font-semibold">{room.name}</h2>
+      <p className="text-sm text-gray-400">By {room.owner}</p>
+      <p className="text-gray-300 mt-1 text-sm">
+        {room.description || "No description provided"}
+      </p>
+      <p className="text-xs text-gray-400 mt-2">
+        Members: {room.currentMembers}/{room.maxMembers}
+      </p>
+      <button
+        onClick={() => handleJoinRequest(room._id)}
+        className="mt-4 w-full py-2 rounded-lg font-semibold bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black transition"
+      >
+        Ask to Join
+      </button>
+    </div>
+  ))}
+</div>
+
+
       </div>
     </>
   );

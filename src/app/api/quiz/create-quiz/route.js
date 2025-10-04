@@ -41,7 +41,7 @@ export async function POST(req) {
       roomId,
       createdBy,
     } = await req.json();
-    console.log("pdfurl", pdfUrl);
+    // console.log("pdfurl", pdfUrl);
     if (!pdfUrl || !topic || !title || !roomId || !createdBy) {
       return new Response(
         JSON.stringify({ error: "Missing required fields" }),

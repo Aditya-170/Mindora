@@ -132,7 +132,7 @@ const Whiteboard = ({ roomId }) => {
     }, [roomId]);
 
     useEffect(() => {
-        console.log("Cursors updated:", cursors);
+        // console.log("Cursors updated:", cursors);
     }, [cursors]);
 
     const handleMouseMove = (e) => {

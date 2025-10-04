@@ -3,9 +3,10 @@
 import Footer from "@/components/Footer";
 import UserNavbar from "@/components/Navbar";
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";  // ✅ Clerk hook
+import { useUser } from "@clerk/nextjs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "@/components/Spinner";
 
 export default function ContactUsPage() {
   const { user } = useUser();
@@ -24,13 +25,13 @@ export default function ContactUsPage() {
         body: JSON.stringify({
           topic,
           description,
-          userId: user?.id, // ✅ send Clerk userId
+          userId: user?.id,
         }),
       });
 
       if (res.ok) {
         toast.success("✅ Your issue has been sent to the admin!", {
-          style: { background: "black", color: "yellow" },
+          style: { background: "black", color: "#fde047" },
         });
         setTopic("");
         setDescription("");
@@ -51,9 +52,9 @@ export default function ContactUsPage() {
   return (
     <>
       <UserNavbar />
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-yellow-200 to-blue-200 p-6">
-        <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
-          <h1 className="text-2xl font-bold text-blue-700 mb-6 text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-black p-6 text-yellow-300">
+        <div className="bg-gray-900 shadow-lg rounded-2xl p-8 w-full max-w-md border-2 border-yellow-400">
+          <h1 className="text-2xl font-bold text-yellow-300 mb-6 text-center">
             Contact Us
           </h1>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -62,7 +63,7 @@ export default function ContactUsPage() {
               placeholder="Topic"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              className="px-4 py-2 rounded-lg border-2 border-yellow-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-4 py-2 rounded-lg border-2 border-blue-500 bg-black text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               required
             />
             <textarea
@@ -70,17 +71,17 @@ export default function ContactUsPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={5}
-              className="px-4 py-2 rounded-lg border-2 border-yellow-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="px-4 py-2 rounded-lg border-2 border-blue-500 bg-black text-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
               required
             />
             <button
               type="submit"
               disabled={loading}
               className="px-6 py-2 rounded-xl font-semibold 
-                         bg-gradient-to-r from-yellow-400 to-blue-500 
-                         text-white shadow-md hover:scale-105 transition disabled:opacity-50"
+                         bg-gradient-to-r from-blue-600 to-yellow-400 
+                         text-black shadow-md hover:scale-105 transition disabled:opacity-50"
             >
-              {loading ? "Sending..." : "Send"}
+              {loading ? <Spinner /> : "Send"}
             </button>
           </form>
         </div>

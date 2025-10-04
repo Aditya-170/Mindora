@@ -89,77 +89,77 @@ export default function NotificationsPage() {
         <div className="flex flex-col min-h-screen">
             <UserNavbar />
 
-            <main className="flex-1 bg-gradient-to-b from-[#0b1b3a] to-[#11254d] p-6 md:p-10">
-                <h1 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-8 text-center">
+            <main className="flex-1 bg-gradient-to-b from-[#0b1b3a] to-[#11254d] p-4 sm:p-6 md:p-10">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-yellow-400 mb-6 sm:mb-8 text-center">
                     Notifications
                 </h1>
 
                 {/* Sliding Tabs */}
-                <div className="flex justify-center mb-6 gap-6">
+                <div className="flex flex-col sm:flex-row justify-center items-center mb-6 gap-3 sm:gap-6">
                     <button
                         onClick={() => setActiveTab("invites")}
-                        className={`px-6 py-2 rounded-lg font-semibold ${
-                            activeTab === "invites"
+                        className={`w-full sm:w-auto px-4 sm:px-6 py-2 rounded-lg font-semibold text-sm sm:text-base ${activeTab === "invites"
                                 ? "bg-yellow-400 text-black"
                                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
+                            }`}
                     >
                         Room Invitations
                     </button>
                     <button
                         onClick={() => setActiveTab("requests")}
-                        className={`px-6 py-2 rounded-lg font-semibold ${
-                            activeTab === "requests"
+                        className={`w-full sm:w-auto px-4 sm:px-6 py-2 rounded-lg font-semibold text-sm sm:text-base ${activeTab === "requests"
                                 ? "bg-yellow-400 text-black"
                                 : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                        }`}
+                            }`}
                     >
                         Room Requests
                     </button>
                 </div>
 
                 {loading ? (
-                    <Spinner/>
+                    <div className="flex justify-center items-center h-40">
+                        <Spinner />
+                    </div>
                 ) : (
-                    <div className="flex flex-col gap-10 items-center">
+                    <div className="flex flex-col gap-8 items-center">
                         {/* Invitations Section */}
                         {activeTab === "invites" && (
-                            <section className="w-[85%]">
+                            <section className="w-full sm:w-[85%]">
                                 {invites.length === 0 ? (
                                     <p className="text-gray-300 text-center">No pending invitations.</p>
                                 ) : (
-                                    <div className="flex flex-col gap-6">
+                                    <div className="flex flex-col gap-4 sm:gap-6">
                                         {invites.map((invite) => (
                                             <div
                                                 key={invite.inviteId}
-                                                className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex justify-between items-center"
+                                                className="bg-[#1e2a4b] rounded-xl p-3 sm:p-4 border border-yellow-500/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
                                             >
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                                                     {invite.roomImage && (
                                                         <img
                                                             src={invite.roomImage}
                                                             alt={invite.roomName}
-                                                            className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
+                                                            className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-yellow-400"
                                                         />
                                                     )}
                                                     <div>
-                                                        <h2 className="text-lg font-semibold text-yellow-400">
+                                                        <h2 className="text-base sm:text-lg font-semibold text-yellow-400">
                                                             {invite.roomName}
                                                         </h2>
-                                                        <p className="text-gray-300 text-sm">By {invite.roomOwner}</p>
+                                                        <p className="text-gray-300 text-xs sm:text-sm">By {invite.roomOwner}</p>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex gap-2 ml-6">
+                                                <div className="flex gap-2 w-full sm:w-auto justify-end">
                                                     <button
                                                         onClick={() => handleInviteAction(invite.inviteId, "accept")}
-                                                        className="bg-green-400 hover:bg-green-500 text-black font-semibold px-4 py-1 rounded-lg"
+                                                        className="flex-1 sm:flex-none bg-green-400 hover:bg-green-500 text-black font-semibold px-3 sm:px-4 py-1 rounded-lg text-sm"
                                                     >
                                                         Accept
                                                     </button>
                                                     <button
                                                         onClick={() => handleInviteAction(invite.inviteId, "reject")}
-                                                        className="bg-gray-700 hover:bg-red-500 text-white font-semibold px-4 py-1 rounded-lg"
+                                                        className="flex-1 sm:flex-none bg-gray-700 hover:bg-red-500 text-white font-semibold px-3 sm:px-4 py-1 rounded-lg text-sm"
                                                     >
                                                         Reject
                                                     </button>
@@ -173,47 +173,47 @@ export default function NotificationsPage() {
 
                         {/* Requests Section */}
                         {activeTab === "requests" && (
-                            <section className="w-[85%]">
+                            <section className="w-full sm:w-[85%]">
                                 {requests.length === 0 ? (
                                     <p className="text-gray-300 text-center">No pending requests.</p>
                                 ) : (
-                                    <div className="flex flex-col gap-6">
+                                    <div className="flex flex-col gap-4 sm:gap-6">
                                         {requests.map((request) => (
                                             <div
                                                 key={request.requestId}
-                                                className="bg-[#1e2a4b] rounded-xl p-4 border border-yellow-500/20 flex justify-between items-center"
+                                                className="bg-[#1e2a4b] rounded-xl p-3 sm:p-4 border border-yellow-500/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
                                             >
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                                                     {request.roomImage && (
                                                         <img
                                                             src={request.roomImage}
                                                             alt={request.roomName}
-                                                            className="w-16 h-16 rounded-full object-cover border-2 border-yellow-400"
+                                                            className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-yellow-400"
                                                         />
                                                     )}
                                                     <div>
-                                                        <h2 className="text-lg font-semibold text-yellow-400">
+                                                        <h2 className="text-base sm:text-lg font-semibold text-yellow-400">
                                                             {request.roomName}
                                                         </h2>
-                                                        <p className="text-gray-300 text-sm">
+                                                        <p className="text-gray-300 text-xs sm:text-sm">
                                                             Owner: {request.roomOwner}
                                                         </p>
-                                                        <p className="text-gray-400 text-sm italic">
+                                                        <p className="text-gray-400 text-xs sm:text-sm italic">
                                                             Requested by: {request.fromUserEmail}
                                                         </p>
                                                     </div>
                                                 </div>
 
-                                                <div className="flex gap-2 ml-6">
+                                                <div className="flex gap-2 w-full sm:w-auto justify-end">
                                                     <button
                                                         onClick={() => handleRequestAction(request.requestId, "accept")}
-                                                        className="bg-green-400 hover:bg-green-500 text-black font-semibold px-4 py-1 rounded-lg"
+                                                        className="flex-1 sm:flex-none bg-green-400 hover:bg-green-500 text-black font-semibold px-3 sm:px-4 py-1 rounded-lg text-sm"
                                                     >
                                                         Accept
                                                     </button>
                                                     <button
                                                         onClick={() => handleRequestAction(request.requestId, "reject")}
-                                                        className="bg-gray-700 hover:bg-red-500 text-white font-semibold px-4 py-1 rounded-lg"
+                                                        className="flex-1 sm:flex-none bg-gray-700 hover:bg-red-500 text-white font-semibold px-3 sm:px-4 py-1 rounded-lg text-sm"
                                                     >
                                                         Reject
                                                     </button>
