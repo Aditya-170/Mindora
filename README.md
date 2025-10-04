@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 📚 Real-Time Collaborative Study Platform
 
-## Getting Started
+## 🧠 Overview
+The **Real-Time Collaborative Study Platform** enables students to collaborate effectively in virtual rooms — sharing notes, participating in quizzes, communicating via voice calls, and working together on whiteboards.  
+Each **room** acts as a collaborative space where members can upload resources, interact, and learn together.
 
-First, run the development server:
+The `room/[id]` page serves as the **core hub** of collaboration, bringing together all key features.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features in Room
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### 🧍‍♂️ Member Management
+- 👥 **Members** — View all current members of the room.  
+- ✉️ **Invite Members** — Send invitations for others to join the room.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+### 📄 File & Content Management
+- 📝 **Upload Notes** — Upload study materials and notes.  
+- 📚 **Uploaded Notes** — View all uploaded notes within the room.  
+- 🖼️ **Upload Image** — Upload relevant images or diagrams.  
+- 🖼️ **Uploaded Images** — Browse uploaded images.  
+- 🔗 **Add Links** — Add and share helpful external resources.  
+- 🌐 **Links** — View and access uploaded links.  
+- 🗒️ **Short Notes** — Quick summarized notes for revision.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🎙️ Interaction & Collaboration
+- 🔊 **Voice Call** — Real-time voice communication for live discussions.  
+- 🧑‍🏫 **Whiteboard** — A collaborative whiteboard for brainstorming and problem-solving.  
+- 📢 **Announcements** — View announcements shared in the room.  
+- 🗣️ **Announce To Room** — Post announcements for all members.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+### 🧩 Assessment & Gamification
+- 🧮 **Generate Quiz** — Create quizzes for members to attempt.  
+- 🧠 **Attempt Quiz** — Take quizzes within the room.  
+- 🏆 **Leaderboard** — View top performers and room scores.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ⚙️ Component Mapping
+
+All room features are dynamically rendered using the following map:
+
+```javascript
+const componentsMap = {
+  "Members": <Members roomId={id} />,
+  "Upload Notes": <UploadNotes roomId={id} />,
+  "Invite Members": <InviteMembers roomId={id} />,
+  "Voice Call": <VoiceChannel roomId={id} userId={userId} />,
+  "Add Links": <UploadLink roomId={id} />,
+  "Upload Image": <UploadImage roomId={id} />,
+  "Uploaded Notes": <UploadedNotes roomId={id} />,
+  "Links": <UploadedLinks roomId={id} />,
+  "Uploaded Images": <UploadedImages roomId={id} />,
+  "Short Notes": <ShortNotes roomId={id} />,
+  "Generate Quiz": <QuizGenerator roomId={id} />,
+  "Attempt Quiz": <AttemptQuiz roomId={id} />,
+  "Leaderboard": <LeaderboardPageDummy roomId={id} />,
+  "Whiteboard": <Whiteboard roomId={id} />,
+  "Announcements": <AnnouncementsPage roomId={id} />,
+  "Announce To Room": <UploadAnnouncement roomId={id} />,
+};

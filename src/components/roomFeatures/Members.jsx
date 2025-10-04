@@ -95,45 +95,42 @@ export default function Members({ roomId }) {
       </h2>
 
       {/* Owner */}
-      {owner && (
-        <div className="flex items-center space-x-3 bg-zinc-800 p-3 rounded-lg mb-3">
-          <img
-            src={owner.profileImage || "/default-avatar.png"}
-            alt={owner.name}
-            className="w-10 h-10 rounded-full border border-yellow-400"
-          />
-          <div>
-            <p className="text-yellow-300 font-semibold">{owner.name}</p>
-            <p className="text-sm text-gray-400">{owner.email}</p>
-          </div>
-          <span className="ml-auto text-sm text-green-400">Owner</span>
-        </div>
-      )}
+{owner && (
+  <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 bg-zinc-800 p-3 rounded-lg mb-3">
+    <img
+      src={owner.profileImage || "/default-avatar.png"}
+      alt={owner.name}
+      className="w-10 h-10 rounded-full border border-yellow-400"
+    />
+    <div className="flex-1">
+      <p className="text-yellow-300 font-semibold">{owner.name}</p>
+      <p className="text-sm text-gray-400">{owner.email}</p>
+    </div>
+    <span className="text-sm text-green-400 sm:ml-auto">Owner</span>
+  </div>
+)}
 
-      {/* Members */}
-      {members.length === 0 ? (
-        <p className="text-gray-400">No members yet.</p>
-      ) : (
-        <ul className="space-y-3">
-          {members.map((member) => (
-            <li
-              key={member.clerkId}
-              className="flex items-center space-x-3 bg-zinc-800 p-3 rounded-lg"
-            >
-              <img
-                src={member.profileImage || "/default-avatar.png"}
-                alt={member.name}
-                className="w-10 h-10 rounded-full border border-gray-500"
-              />
-              <div>
-                <p className="text-yellow-300">{member.name}</p>
-                <p className="text-sm text-gray-400">{member.email}</p>
-              </div>
-              <span className="ml-auto text-sm text-gray-400">Member</span>
-            </li>
-          ))}
-        </ul>
-      )}
+{/* Members */}
+<ul className="space-y-3">
+  {members.map((member) => (
+    <li
+      key={member.clerkId}
+      className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 bg-zinc-800 p-3 rounded-lg"
+    >
+      <img
+        src={member.profileImage || "/default-avatar.png"}
+        alt={member.name}
+        className="w-10 h-10 rounded-full border border-gray-500"
+      />
+      <div className="flex-1">
+        <p className="text-yellow-300">{member.name}</p>
+        <p className="text-sm text-gray-400">{member.email}</p>
+      </div>
+      <span className="text-sm text-gray-400 sm:ml-auto">Member</span>
+    </li>
+  ))}
+</ul>
+
 
       {/* Remove Members Modal */}
       {removeModalOpen && (
