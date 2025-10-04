@@ -16,7 +16,7 @@ export default function ChatWidget({ roomId, userName }) {
   useEffect(() => {
     if (!roomId || !userName) return;
 
-    socketRef.current = io("https://mindora-2.onrender.com");
+    socketRef.current = io("https://mindora-new-1.onrender.com");
 
     socketRef.current.emit("join-room", { roomId, userName });
 
@@ -69,7 +69,7 @@ export default function ChatWidget({ roomId, userName }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 30 }}
-            className="flex flex-col w-[380px] max-h-[600px] bg-zinc-900 border border-yellow-500/40 rounded-xl shadow-xl overflow-hidden"
+            className="flex flex-col w-[90vw] sm:w-[380px] max-h-[80vh] bg-zinc-900 border border-yellow-500/40 rounded-xl shadow-xl overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 bg-yellow-500 text-black font-semibold text-lg">
@@ -94,20 +94,22 @@ export default function ChatWidget({ roomId, userName }) {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.2 }}
-                  className={`p-3 rounded-lg max-w-[80%] break-words flex flex-col ${msg.sender === userName
-                      ? "bg-black text-white self-end"
+                  className={`p-3 rounded-lg break-words flex flex-col
+    ${msg.sender === userName
+                      ? "bg-black text-white self-end max-w-[90vw]" // responsive width
                       : msg.sender === "System"
-                        ? "bg-yellow-300 text-black self-center"
-                        : "bg-zinc-700 text-yellow-100 self-start"
+                        ? "bg-yellow-300 text-black self-center max-w-[90vw]"
+                        : "bg-zinc-700 text-yellow-100 self-start max-w-[90vw]"
                     }`}
                 >
-                  <span className="text-l">{msg.text}</span>
+                  <span className="text-sm">{msg.text}</span>
                   {msg.sender !== "System" && (
-                    <span className="text-[14px] text-blue-200 mt-1 self-end">
+                    <span className="text-[12px] text-blue-200 mt-1 self-end">
                       {msg.sender} @ {msg.time}
                     </span>
                   )}
                 </motion.div>
+
               ))}
               <div ref={messagesEndRef}></div>
             </div>

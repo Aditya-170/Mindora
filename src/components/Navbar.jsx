@@ -127,39 +127,57 @@ export default function UserNavbar() {
       </div>
 
       {/* Mobile menu */}
-      {isOpen && (
-        <div className="md:hidden bg-gray-800 border-t border-yellow-500">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="block px-6 py-3 hover:bg-yellow-500 hover:text-white"
-            >
-              {link.label}
-            </a>
-          ))}
+      {/* Mobile menu */}
+{isOpen && (
+  <div className="md:hidden bg-gray-800 border-t border-yellow-500">
+    {navLinks.map((link) => (
+      <a
+        key={link.label}
+        href={link.href}
+        className="block px-6 py-3 hover:bg-yellow-500 hover:text-white"
+      >
+        {link.label}
+      </a>
+    ))}
 
-          {/* Notifications in mobile */}
-          <SignedIn>
-            <a
-              href="/notification"
-              className="block px-6 py-3 flex items-center space-x-2 hover:bg-yellow-500 hover:text-white"
-            >
-              <Bell
-                className={`w-5 h-5 ${
-                  notifCount > 0 ? "text-yellow-400 animate-pulse" : "text-yellow-500"
-                }`}
-              />
-              <span>Notifications</span>
-              {notifCount > 0 && (
-                <span className="ml-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-bounce">
-                  {notifCount}
-                </span>
-              )}
-            </a>
-          </SignedIn>
-        </div>
-      )}
+    {/* Notifications in mobile */}
+    <SignedIn>
+      <a
+        href="/notification"
+        className="block px-6 py-3 flex items-center space-x-2 hover:bg-yellow-500 hover:text-white"
+      >
+        <Bell
+          className={`w-5 h-5 ${
+            notifCount > 0 ? "text-yellow-400 animate-pulse" : "text-yellow-500"
+          }`}
+        />
+        <span>Notifications</span>
+        {notifCount > 0 && (
+          <span className="ml-2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full animate-bounce">
+            {notifCount}
+          </span>
+        )}
+      </a>
+    </SignedIn>
+
+    {/* Sign In / Sign Up in mobile for SignedOut users */}
+    <SignedOut>
+      <div className="flex flex-col px-6 py-3 space-y-2">
+        <SignInButton>
+          <button className="w-full px-4 py-2 bg-yellow-500 text-black font-semibold rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
+            Sign In
+          </button>
+        </SignInButton>
+        <Link href="/sign-up">
+          <button className="w-full px-4 py-2 bg-transparent border border-yellow-500 text-yellow-500 font-semibold rounded-xl hover:bg-yellow-500 hover:text-black transition-all duration-300">
+            Sign Up
+          </button>
+        </Link>
+      </div>
+    </SignedOut>
+  </div>
+)}
+
     </nav>
   );
 }
