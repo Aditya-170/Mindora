@@ -14,7 +14,7 @@ export async function POST(req) {
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
-    console.log("debug 1");
+    // console.log("debug 1");
     // Find the leaderboard document for this room
     const roomLeaderboard = await RoomLeaderboard.findOne({ roomId });
     if (!roomLeaderboard) {

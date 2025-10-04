@@ -20,12 +20,12 @@ const io = new Server(server, {
 const onlineUsers = {}; // { roomId: [ { socketId, userName } ] }
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
+  // console.log("User connected:", socket.id);
 
   // Join room
   socket.on("join-room", ({ roomId, userName }) => {
     socket.join(roomId);
-    console.log(`${userName} joined room ${roomId}`);
+    // console.log(`${userName} joined room ${roomId}`);
 
     // Track user in the room
     if (!onlineUsers[roomId]) onlineUsers[roomId] = [];
@@ -85,13 +85,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("cursor-move", ({ roomId, userId, name, x, y }) => {
-    console.log("user connected for cursor", name);
+    // console.log("user connected for cursor", name);
     socket.to(roomId).emit("cursor-move", { userId, name, x, y });
   });
 
   // Disconnect
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+    // console.log("User disconnected:", socket.id);
 
     // Remove user from onlineUsers
     for (const roomId in onlineUsers) {
