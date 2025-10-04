@@ -6,6 +6,7 @@ import UserNavbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "@/components/Spinner";
 
 export default function NotificationsPage() {
     const { user } = useUser();
@@ -118,7 +119,7 @@ export default function NotificationsPage() {
                 </div>
 
                 {loading ? (
-                    <p className="text-center text-yellow-400 mt-10">Loading...</p>
+                    <Spinner/>
                 ) : (
                     <div className="flex flex-col gap-10 items-center">
                         {/* Invitations Section */}

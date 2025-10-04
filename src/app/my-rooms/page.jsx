@@ -7,6 +7,7 @@ import UserNavbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "@/components/Spinner";
 
 export default function MyRoomsPage() {
   const [rooms, setRooms] = useState([]);
@@ -42,7 +43,7 @@ export default function MyRoomsPage() {
   }
 
   if (loading) {
-    return <p className="text-center mt-10">Loading your rooms...</p>;
+    return <Spinner/>;
   }
 
   return (

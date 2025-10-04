@@ -7,6 +7,7 @@ import UserNavbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "@/components/Spinner";
 
 export default function JoinedRoomPage() {
   const { user, isLoaded } = useUser();
@@ -50,7 +51,7 @@ export default function JoinedRoomPage() {
   }
 
   if (loading) {
-    return <p className="text-center mt-10">Loading joined rooms...</p>;
+    return <Spinner/>;
   }
 
   return (

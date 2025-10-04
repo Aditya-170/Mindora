@@ -5,6 +5,7 @@ import { Link2 } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
+import Spinner from "../Spinner";
 export default function UploadLink({ roomId }) {
    const { user } = useUser();
   const [topic, setTopic] = useState("");
@@ -105,7 +106,7 @@ export default function UploadLink({ roomId }) {
           className="w-full bg-yellow-500 text-black font-semibold py-3 rounded-xl shadow-lg hover:bg-yellow-400 transition flex items-center justify-center gap-2 disabled:opacity-60"
         >
           <Link2 className="w-5 h-5" />
-          {loading ? "Uploading..." : "Upload Link"}
+          {loading ? <Spinner/> : "Upload Link"}
         </motion.button>
       </motion.div>
     </div>

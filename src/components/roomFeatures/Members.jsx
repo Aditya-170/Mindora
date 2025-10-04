@@ -3,6 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // ✅ Import toast
+import Spinner from "../Spinner";
 
 export default function Members({ roomId }) {
   const [members, setMembers] = useState([]);
@@ -74,7 +75,7 @@ export default function Members({ roomId }) {
     }
   };
 
-  if (loading) return <p className="text-yellow-400 text-center">Loading members...</p>;
+  if (loading) return <Spinner />;
 
   return (
     <div className="p-4 bg-zinc-900 rounded-xl border border-yellow-500/20">

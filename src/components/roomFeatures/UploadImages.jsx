@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ImagePlus } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-toastify";
+import Spinner from "../Spinner";
 
 export default function UploadImage({ roomId }) {
   const { user } = useUser();
@@ -133,7 +134,7 @@ export default function UploadImage({ roomId }) {
           disabled={loading}
           className="mt-6 w-full bg-yellow-500 text-black font-semibold py-3 rounded-xl shadow-lg hover:bg-yellow-400 transition disabled:opacity-50"
         >
-          {loading ? "Uploading..." : "Upload"}
+          {loading ? <Spinner/> : "Upload"}
         </motion.button>
       </motion.div>
     </div>

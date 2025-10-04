@@ -9,7 +9,6 @@ import {
     Legend,
     Title,
 } from "chart.js";
-import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useUser } from "@clerk/nextjs";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);

@@ -1,7 +1,8 @@
-// app/api/dashboard/route.js
 import connectDB from "@/lib/db";
 import roomModel from "@/models/roomModel";
+import Request from "@/models/joinRequest";
 import { NextResponse } from "next/server";
+import invite from "@/models/invite";
 
 export async function GET(req) {
   try {
@@ -13,16 +14,22 @@ export async function GET(req) {
       return NextResponse.json({ error: "Missing userId" }, { status: 400 });
     }
 
-    // ✅ Total created
+    // ✅ Total rooms created
     const createdRooms = await roomModel.find({ createdBy: userId });
     const totalCreated = createdRooms.length;
 
-    // ✅ Total joined (member but not owner)
+    // ✅ Total rooms joined (member but not owner)
     const joinedRooms = await roomModel.find({
       members: userId,
       createdBy: { $ne: userId },
     });
     const totalJoined = joinedRooms.length;
+
+    // ✅ Total room join requests (sent by this user)
+    const totalRequests = await Request.countDocuments({ senderId: userId });
+
+    // ✅ Total invitations (received by this user)
+    const totalInvitations = await invite.countDocuments({ receiverId: userId });
 
     // ✅ Rooms created per month
     const createdPerMonth = await roomModel.aggregate([
@@ -37,12 +44,11 @@ export async function GET(req) {
     ]);
 
     // ✅ Rooms joined per month
-    // Assuming you keep `joinedAt` for members (if not, fallback needed)
     const joinedPerMonth = await roomModel.aggregate([
       { $match: { members: userId } },
       {
         $group: {
-          _id: { $month: "$createdAt" }, // Approx using room's creation date
+          _id: { $month: "$createdAt" },
           count: { $sum: 1 },
         },
       },
@@ -52,6 +58,8 @@ export async function GET(req) {
     return NextResponse.json({
       totalCreated,
       totalJoined,
+      totalRequests,
+      totalInvitations,
       createdPerMonth,
       joinedPerMonth,
     });

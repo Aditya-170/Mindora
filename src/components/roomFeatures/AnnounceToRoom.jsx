@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Megaphone, Send } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
+import Spinner from "../Spinner";
 
 export default function UploadAnnouncement({ roomId }) {
   const { user } = useUser(); // Get logged-in user
@@ -107,7 +108,7 @@ export default function UploadAnnouncement({ roomId }) {
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition disabled:opacity-50"
           >
             <Send className="w-4 h-4" />
-            {loading ? "Uploading..." : "Upload Announcement"}
+            {loading ? <Spinner/> : "Upload Announcement"}
           </button>
         </form>
 

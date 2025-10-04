@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Eye, Printer, ArrowLeft, FileText } from "lucide-react";
+import Spinner from "../Spinner";
 
 export default function ShortNotes({ roomId }) {
   const [notes, setNotes] = useState([]);
@@ -138,7 +139,7 @@ export default function ShortNotes({ roomId }) {
           Short Notes
         </h2>
 
-        {loading && <p className="text-center text-yellow-200">Loading...</p>}
+        {loading && <Spinner />}
         {error && <p className="text-center text-red-400">{error}</p>}
 
         <div className="flex-1 overflow-y-auto max-h-[500px] space-y-4">

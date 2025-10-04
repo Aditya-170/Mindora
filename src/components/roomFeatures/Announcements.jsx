@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Megaphone } from "lucide-react";
+import Spinner from "../Spinner";
 
 export default function AnnouncementsPage({ roomId }) {
   const [announcements, setAnnouncements] = useState([]);
@@ -103,7 +104,10 @@ export default function AnnouncementsPage({ roomId }) {
             ))}
 
             {loadingMore && (
+              <>
+              <Spinner />
               <p className="text-center py-4 text-yellow-200">Loading more…</p>
+              </>
             )}
           </div>
         )}
