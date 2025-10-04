@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Eye, ArrowLeft } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-toastify";
+import Spinner from "../Spinner";
 
 export default function UploadedImages({ roomId }) {
   const { user } = useUser();
@@ -95,7 +96,7 @@ export default function UploadedImages({ roomId }) {
       {/* Scrollable container for images */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-yellow-500 scrollbar-track-zinc-700">
         {loading ? (
-          <p className="text-center text-yellow-300">Loading images...</p>
+          <Spinner/>
         ) : images.length === 0 ? (
           <p className="text-center text-yellow-300">No images uploaded yet.</p>
         ) : (

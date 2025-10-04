@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import Spinner from "@/components/Spinner";
 
 export default function ProfilePage() {
   const { user, isSignedIn } = useUser();
@@ -37,7 +38,7 @@ export default function ProfilePage() {
     }
   }, [isSignedIn, user, router]);
 
-  if (loading) return <p className="text-center mt-20 text-white">Loading...</p>;
+  if (loading) return <Spinner/>;
   if (!userData) return <p className="text-center mt-20 text-red-500">User not found</p>;
 
   return (

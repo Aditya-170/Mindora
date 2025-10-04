@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FileText, Eye, Download, ArrowLeft } from "lucide-react";
+import Spinner from "../Spinner";
 
 export default function UploadedNotes({ roomId }) {
   const [selectedNote, setSelectedNote] = useState(null);
@@ -98,7 +99,7 @@ export default function UploadedNotes({ roomId }) {
           Uploaded Notes
         </h2>
 
-        {loading && <p className="text-center text-yellow-200">Loading...</p>}
+        {loading && <Spinner/>}
         {error && <p className="text-center text-red-400">{error}</p>}
 
         {/* Scrollable list of notes */}

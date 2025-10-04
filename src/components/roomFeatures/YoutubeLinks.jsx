@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ExternalLink } from "lucide-react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Spinner from "../Spinner";
 
 export default function UploadedLinks({ roomId }) {
   const [links, setLinks] = useState([]);
@@ -45,9 +46,7 @@ export default function UploadedLinks({ roomId }) {
       </div>
 
       {loading ? (
-        <div className="flex-1 flex items-center justify-center text-yellow-300 text-lg">
-          Loading...
-        </div>
+        <Spinner/>
       ) : links.length === 0 ? (
         <div className="flex-1 flex items-center justify-center text-yellow-300 text-lg">
           No links uploaded yet.

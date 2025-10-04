@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-toastify"; // import toast
+import Spinner from "../Spinner";
 
 export default function InviteMembers({ roomId }) {
   const { user } = useUser();
@@ -68,7 +69,7 @@ export default function InviteMembers({ roomId }) {
         className="w-full px-4 py-2 rounded-lg bg-zinc-800 text-yellow-100 border border-yellow-500 focus:outline-none focus:ring-2 focus:ring-yellow-500"
       />
 
-      {loading && <p className="text-sm text-gray-400 mt-1">Searching...</p>}
+      {loading && <Spinner />}
 
       {results.length > 0 && (
         <ul className="absolute top-full left-0 z-10 w-full max-h-60 overflow-y-auto mt-1 bg-zinc-900 rounded-lg border border-yellow-500 p-2">

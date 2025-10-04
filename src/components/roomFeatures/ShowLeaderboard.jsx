@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Crown, Users } from "lucide-react";
+import Spinner from "../Spinner";
 
 export default function LeaderboardPage({ roomId }) {
     const [leaderboard, setLeaderboard] = useState([]);
@@ -66,9 +67,7 @@ export default function LeaderboardPage({ roomId }) {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center text-yellow-300">
-                Loading leaderboard...
-            </div>
+             <Spinner/>
         );
     }
 
