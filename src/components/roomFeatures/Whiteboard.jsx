@@ -32,7 +32,7 @@ const Whiteboard = ({ roomId }) => {
     const socketRef = useRef();
 
     useEffect(() => {
-        socketRef.current = io("https://mindora-2.onrender.com");
+        socketRef.current = io("https://mindora-new-1.onrender.com");
         const socket = socketRef.current;
 
         if (roomId && user) {
