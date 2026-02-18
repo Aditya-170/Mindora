@@ -14,7 +14,7 @@ export async function POST(req) {
 
     // Upload the file to the "pdfs" bucket
     const { data, error } = await supabaseServer.storage
-      .from("pdfs")
+      .from("short-notes")
       .upload(filename, buffer, {
         contentType: req.headers.get("content-type") || "application/pdf",
         upsert: true, // overwrite if file exists
@@ -25,7 +25,8 @@ export async function POST(req) {
 
     // Manually construct the public URL
     const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${data.fullPath}`;
-
+//https://vasllwsknxllxtpdfqjo.storage.supabase.co/storage/v1/s3
+//https://vasllwsknxllxtpdfqjo.supabase.co/storage/v1/object/public/short-notes/LiskovSubstitution.pdf
     // console.log("Upload data:", data);
     // console.log("Public URL:", publicUrl);
 

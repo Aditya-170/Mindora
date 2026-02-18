@@ -1,19 +1,22 @@
-import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const model = genAI.getGenerativeModel({
+  model: "gemini-2.5-flash",
+});
 
 async function callGemini(prompt) {
   try {
-    const res = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        contents: [{ parts: [{ text: prompt }] }],
-      },
-      { headers: { "Content-Type": "application/json" } }
-    );
+    console.log("api hit");
 
-    const answer = res.data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    return answer.trim();
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    return text.trim();
   } catch (err) {
-    console.error("Gemini API Error:", err.response?.data || err.message);
+    console.error("Gemini API Error:", err.message);
     return "Sorry, I couldn't fetch an answer.";
   }
 }
@@ -21,6 +24,7 @@ async function callGemini(prompt) {
 export async function POST(req) {
   try {
     const { question } = await req.json();
+
     if (!question) {
       return new Response(
         JSON.stringify({ error: "No question provided" }),
@@ -29,8 +33,9 @@ export async function POST(req) {
     }
 
     const prompt = `
-You are an expert assistant. Answer the following question clearly and concisely:
-you should return the ans in max 10 lines. But you should always try to be short
+You are an expert assistant. Answer the following question clearly and concisely.
+Return the answer in maximum 10 lines and try to be short.
+
 Question:
 ${question}
 
@@ -41,10 +46,14 @@ Answer:
 
     return new Response(
       JSON.stringify({ answer }),
-      { status: 200, headers: { "Content-Type": "application/json" } }
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
     );
   } catch (err) {
     console.error("Error in /api/ask:", err.message);
+
     return new Response(
       JSON.stringify({ error: "Failed to get answer" }),
       { status: 500 }
