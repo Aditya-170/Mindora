@@ -122,39 +122,54 @@ export default function RoomFeaturesPage() {
         </button>
 
         {/* Sidebar */}
+        {/* Sidebar */}
         <AnimatePresence>
-          {(isSidebarOpen || typeof window !== "undefined" && window.innerWidth >= 768) && (
-            <motion.aside
-              ref={sidebarRef}
-              initial={{ x: -250, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -250, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-64 flex flex-col h-[calc(100vh-96px)] bg-zinc-900 border-r border-yellow-500/20 p-4 rounded-xl absolute md:static z-20"
-            >
-              <h2 className="text-lg text-center font-bold text-white mb-8">
-                Options
-              </h2>
-              <div className="flex-1 flex flex-col overflow-y-auto pr-2 space-y-2">
-                {sidebarOptions.map((option, i) => (
-                  <motion.button
-                    key={option}
-                    ref={(el) => (buttonRefs.current[i] = el)}
-                    onClick={() => handleSelect(option, i)}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: i * 0.03 }}
-                    className={`w-full px-3 py-2 rounded-lg mt-2 font-medium text-left transition-colors duration-200 ${
-                      selected === option
-                        ? "bg-yellow-500 text-black"
-                        : "hover:bg-yellow-500/10"
-                    }`}
-                  >
-                    {option}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.aside>
+          {(isSidebarOpen || (typeof window !== "undefined" && window.innerWidth >= 768)) && (
+            <>
+              {/* Backdrop */}
+              {isSidebarOpen && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.5 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="fixed inset-0 bg-black z-40"
+                  onClick={() => setIsSidebarOpen(false)}
+                />
+              )}
+
+              <motion.aside
+                ref={sidebarRef}
+                initial={{ x: -250, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -250, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="w-64 flex flex-col bg-zinc-900 border-r border-yellow-500/20 p-4 rounded-xl absolute md:static z-50 max-h-[calc(100vh-80px)] md:h-auto"
+              >
+                <h2 className="text-lg text-center font-bold text-white mb-8">
+                  Options
+                </h2>
+                <div className="flex-1 flex flex-col overflow-y-auto pr-2 space-y-2">
+                  {sidebarOptions.map((option, i) => (
+                    <motion.button
+                      key={option}
+                      ref={(el) => (buttonRefs.current[i] = el)}
+                      onClick={() => handleSelect(option, i)}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: i * 0.03 }}
+                      className={`w-full px-3 py-2 rounded-lg mt-2 font-medium text-left transition-colors duration-200 ${selected === option
+                          ? "bg-yellow-500 text-black"
+                          : "hover:bg-yellow-500/10"
+                        }`}
+                    >
+                      {option}
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.aside>
+
+            </>
           )}
         </AnimatePresence>
 

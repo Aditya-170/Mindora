@@ -6,7 +6,7 @@ import roomModel from "@/models/roomModel";
 export async function GET(req, { params }) {
   try {
     await connectDB();
-    const { id } = params;
+    const { id } = await params;
 
     const room = await roomModel.findById(id).lean();
     if (!room) {
