@@ -10,17 +10,21 @@ import {
 } from "lucide-react";
 
 const toolConfig = [
-  { id: "draw",    label: "Draw",    Icon: Pencil },
-  { id: "eraser",  label: "Eraser",  Icon: Eraser },
-  { id: "line",    label: "Line",    Icon: Minus },
-  { id: "rect",    label: "Rect",    Icon: RectangleHorizontal },
-  { id: "square",  label: "Square",  Icon: Square },
-  { id: "circle",  label: "Circle",  Icon: CircleIcon },
+  { id: "draw", label: "Draw", Icon: Pencil },
+  { id: "eraser", label: "Eraser", Icon: Eraser },
+  { id: "line", label: "Line", Icon: Minus },
+  { id: "rect", label: "Rect", Icon: RectangleHorizontal },
+  { id: "square", label: "Square", Icon: Square },
+  { id: "circle", label: "Circle", Icon: CircleIcon },
   { id: "ellipse", label: "Ellipse", Icon: Ellipsis },
-  { id: "text",    label: "Text",    Icon: Type },
+  { id: "text", label: "Text", Icon: Type },
 ];
 
 const Whiteboard = ({ roomId }) => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const stageRef = useRef(null);
   const containerRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -244,7 +248,7 @@ const Whiteboard = ({ roomId }) => {
     if (!currentShape) return null;
     return renderShape(currentShape, "current");
   };
-
+  if (!isClient) return null;
   return (
     <div className="p-4 md:p-6 min-h-full flex flex-col gap-4" style={{ color: "#f4f4ff" }}>
 
@@ -270,15 +274,15 @@ const Whiteboard = ({ roomId }) => {
                 style={
                   active
                     ? {
-                        background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
-                        color: "#fff",
-                        boxShadow: "0 0 14px rgba(124,58,237,0.4)",
-                      }
+                      background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                      color: "#fff",
+                      boxShadow: "0 0 14px rgba(124,58,237,0.4)",
+                    }
                     : {
-                        background: "rgba(255,255,255,0.05)",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                        color: "#8888aa",
-                      }
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      color: "#8888aa",
+                    }
                 }
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -366,11 +370,11 @@ const Whiteboard = ({ roomId }) => {
             saving
               ? { background: "rgba(124,58,237,0.15)", color: "#5e5e80", cursor: "not-allowed" }
               : {
-                  background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
-                  color: "#fff",
-                  boxShadow: "0 0 14px rgba(124,58,237,0.35)",
-                  cursor: "pointer",
-                }
+                background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                color: "#fff",
+                boxShadow: "0 0 14px rgba(124,58,237,0.35)",
+                cursor: "pointer",
+              }
           }
           onMouseEnter={(e) => { if (!saving) e.currentTarget.style.boxShadow = "0 0 24px rgba(124,58,237,0.55)"; }}
           onMouseLeave={(e) => { if (!saving) e.currentTarget.style.boxShadow = "0 0 14px rgba(124,58,237,0.35)"; }}
@@ -382,72 +386,72 @@ const Whiteboard = ({ roomId }) => {
 
       {/* Canvas wrapper — measures available width */}
       <div ref={wrapperRef} className="w-full">
-      {/* Canvas container — blackboard */}
-      <div
-        ref={containerRef}
-        style={{
-          backgroundColor: "#111111",
-          width: "100%",
-          height: stageSize.height,
-          position: "relative",
-          borderRadius: 16,
-          overflow: "hidden",
-          boxShadow: "0 0 0 2px rgba(124,58,237,0.3), 0 8px 40px rgba(0,0,0,0.6)",
-        }}
-      >
-        <Stage
-          width={stageSize.width}
-          height={stageSize.height}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          ref={stageRef}
-        >
-          <Layer>
-            {lines.map((line, i) =>
-              line && line.points ? (
-                <Line key={i} points={line.points} stroke={line.color} strokeWidth={line.strokeWidth} lineCap="round" />
-              ) : null
-            )}
-            {shapes.map(renderShape)}
-            {renderCurrentShape()}
-            {texts.map((t, i) => (
-              <Text key={i} x={t.x} y={t.y} text={t.text} fontSize={t.fontSize} fill={t.color} />
-            ))}
-          </Layer>
-          <Layer>
-            {Object.entries(cursors).map(([id, c]) =>
-              id !== user?.id ? (
-                <React.Fragment key={id}>
-                  <Circle x={c.x} y={c.y} radius={5} fill="red" />
-                  <Text x={c.x + 8} y={c.y - 10} text={c.name} fontSize={14} fill="#f4f4ff" />
-                </React.Fragment>
-              ) : null
-            )}
-          </Layer>
-        </Stage>
-
-        {/* Textarea for text tool */}
-        <textarea
-          ref={textAreaRef}
+        {/* Canvas container — blackboard */}
+        <div
+          ref={containerRef}
           style={{
-            display: "none",
-            position: "absolute",
-            zIndex: 1000,
-            background: "#111111",
-            border: "1px solid rgba(255,255,255,0.2)",
-            padding: "4px",
-            fontSize: "18px",
-            outline: "none",
-            resize: "none",
-            minHeight: "22px",
+            backgroundColor: "#111111",
+            width: "100%",
+            height: stageSize.height,
+            position: "relative",
+            borderRadius: 16,
+            overflow: "hidden",
+            boxShadow: "0 0 0 2px rgba(124,58,237,0.3), 0 8px 40px rgba(0,0,0,0.6)",
           }}
-          onBlur={handleTextCommit}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") { e.preventDefault(); handleTextCommit(); }
-          }}
-        />
-      </div>
+        >
+          <Stage
+            width={stageSize.width}
+            height={stageSize.height}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            ref={stageRef}
+          >
+            <Layer>
+              {lines.map((line, i) =>
+                line && line.points ? (
+                  <Line key={i} points={line.points} stroke={line.color} strokeWidth={line.strokeWidth} lineCap="round" />
+                ) : null
+              )}
+              {shapes.map(renderShape)}
+              {renderCurrentShape()}
+              {texts.map((t, i) => (
+                <Text key={i} x={t.x} y={t.y} text={t.text} fontSize={t.fontSize} fill={t.color} />
+              ))}
+            </Layer>
+            <Layer>
+              {Object.entries(cursors).map(([id, c]) =>
+                id !== user?.id ? (
+                  <React.Fragment key={id}>
+                    <Circle x={c.x} y={c.y} radius={5} fill="red" />
+                    <Text x={c.x + 8} y={c.y - 10} text={c.name} fontSize={14} fill="#f4f4ff" />
+                  </React.Fragment>
+                ) : null
+              )}
+            </Layer>
+          </Stage>
+
+          {/* Textarea for text tool */}
+          <textarea
+            ref={textAreaRef}
+            style={{
+              display: "none",
+              position: "absolute",
+              zIndex: 1000,
+              background: "#111111",
+              border: "1px solid rgba(255,255,255,0.2)",
+              padding: "4px",
+              fontSize: "18px",
+              outline: "none",
+              resize: "none",
+              minHeight: "22px",
+            }}
+            onBlur={handleTextCommit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") { e.preventDefault(); handleTextCommit(); }
+            }}
+          />
+        </div>
       </div>
     </div>
   );

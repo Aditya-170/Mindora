@@ -24,7 +24,7 @@ services:
     # command: npm run dev <-- REMOVE this line
     volumes:
       - .:/app
-      - /app/node_modules
+      - node_modules_cache:/app/node_modules 
       - /app/.next        
     restart: unless-stopped
 
@@ -60,3 +60,6 @@ services:
       - ./socket-server:/app
       - /app/node_modules
     restart: unless-stopped
+    
+volumes:
+  node_modules_cache:
