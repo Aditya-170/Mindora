@@ -1,4 +1,5 @@
 "use client";
+import dynamic from 'next/dynamic';
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "@/components/Navbar";
@@ -9,7 +10,6 @@ import ChatWidget from "@/components/roomFeatures/Chats";
 import Members from "@/components/roomFeatures/Members";
 import UploadNotes from "@/components/roomFeatures/UploadNotes";
 import InviteMembers from "@/components/roomFeatures/InviteMembers";
-import VoiceChannel from "@/components/roomFeatures/VoiceChannel";
 import UploadLink from "@/components/roomFeatures/AddYoutubeLinks";
 import UploadImage from "@/components/roomFeatures/UploadImages";
 import UploadedNotes from "@/components/roomFeatures/UploadedNotes";
@@ -18,10 +18,34 @@ import UploadedImages from "@/components/roomFeatures/UploadedImages";
 import ShortNotes from "@/components/roomFeatures/ShortNotes";
 import QuizGenerator from "@/components/roomFeatures/GenerateQuiz";
 import AttemptQuiz from "@/components/roomFeatures/AttemptQuiz";
-import Whiteboard from "@/components/roomFeatures/Whiteboard";
 import LeaderboardPageDummy from "@/components/roomFeatures/ShowLeaderboard";
 import AnnouncementsPage from "@/components/roomFeatures/Announcements";
 import UploadAnnouncement from "@/components/roomFeatures/AnnounceToRoom";
+
+// Dynamic imports for client-heavy/canvas components
+const Whiteboard = dynamic(
+  () => import('@/components/roomFeatures/Whiteboard'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-full bg-gray-100">
+        <p className="text-gray-600">Loading whiteboard...</p>
+      </div>
+    )
+  }
+);
+
+const VoiceChannel = dynamic(
+  () => import('@/components/roomFeatures/VoiceChannel'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center justify-center h-full bg-gray-100">
+        <p className="text-gray-600">Loading voice channel...</p>
+      </div>
+    )
+  }
+);
 import {
   Users, Upload, UserPlus, Mic, Link2, Image, FileText, Youtube,
   Images, StickyNote, Brain, Trophy, Radio, PenLine, Megaphone,
@@ -29,22 +53,22 @@ import {
 } from "lucide-react";
 
 const sidebarOptions = [
-  { label: "Members",          icon: Users      },
-  { label: "Invite Members",   icon: UserPlus   },
-  { label: "Upload Notes",     icon: Upload     },
-  { label: "Upload Image",     icon: Image      },
-  { label: "Add Links",        icon: Link2      },
-  { label: "Generate Quiz",    icon: Brain      },
-  { label: "Uploaded Notes",   icon: FileText   },
-  { label: "Uploaded Images",  icon: Images     },
-  { label: "Links",            icon: Youtube    },
-  { label: "Short Notes",      icon: StickyNote },
-  { label: "Attempt Quiz",     icon: PenLine    },
-  { label: "Leaderboard",      icon: Trophy     },
-  { label: "Voice Call",       icon: Mic        },
-  { label: "Whiteboard",       icon: Radio      },
-  { label: "Announce To Room", icon: Megaphone  },
-  { label: "Announcements",    icon: Bell       },
+  { label: "Members", icon: Users },
+  { label: "Invite Members", icon: UserPlus },
+  { label: "Upload Notes", icon: Upload },
+  { label: "Upload Image", icon: Image },
+  { label: "Add Links", icon: Link2 },
+  { label: "Generate Quiz", icon: Brain },
+  { label: "Uploaded Notes", icon: FileText },
+  { label: "Uploaded Images", icon: Images },
+  { label: "Links", icon: Youtube },
+  { label: "Short Notes", icon: StickyNote },
+  { label: "Attempt Quiz", icon: PenLine },
+  { label: "Leaderboard", icon: Trophy },
+  { label: "Voice Call", icon: Mic },
+  { label: "Whiteboard", icon: Radio },
+  { label: "Announce To Room", icon: Megaphone },
+  { label: "Announcements", icon: Bell },
 ];
 
 function SidebarContent({ sidebarRef, buttonRefs, selected, handleSelect }) {
@@ -144,21 +168,21 @@ export default function RoomFeaturesPage() {
   }, [id]);
 
   const componentsMap = {
-    "Members":          <Members roomId={id} />,
-    "Upload Notes":     <UploadNotes roomId={id} />,
-    "Invite Members":   <InviteMembers roomId={id} />,
-    "Voice Call":       <VoiceChannel roomId={id} userId={userId} />,
-    "Add Links":        <UploadLink roomId={id} />,
-    "Upload Image":     <UploadImage roomId={id} />,
-    "Uploaded Notes":   <UploadedNotes roomId={id} />,
-    "Links":            <UploadedLinks roomId={id} />,
-    "Uploaded Images":  <UploadedImages roomId={id} />,
-    "Short Notes":      <ShortNotes roomId={id} />,
-    "Generate Quiz":    <QuizGenerator roomId={id} />,
-    "Attempt Quiz":     <AttemptQuiz roomId={id} />,
-    "Leaderboard":      <LeaderboardPageDummy roomId={id} />,
-    "Whiteboard":       <Whiteboard roomId={id} />,
-    "Announcements":    <AnnouncementsPage roomId={id} />,
+    "Members": <Members roomId={id} />,
+    "Upload Notes": <UploadNotes roomId={id} />,
+    "Invite Members": <InviteMembers roomId={id} />,
+    "Voice Call": <VoiceChannel roomId={id} userId={userId} />,
+    "Add Links": <UploadLink roomId={id} />,
+    "Upload Image": <UploadImage roomId={id} />,
+    "Uploaded Notes": <UploadedNotes roomId={id} />,
+    "Links": <UploadedLinks roomId={id} />,
+    "Uploaded Images": <UploadedImages roomId={id} />,
+    "Short Notes": <ShortNotes roomId={id} />,
+    "Generate Quiz": <QuizGenerator roomId={id} />,
+    "Attempt Quiz": <AttemptQuiz roomId={id} />,
+    "Leaderboard": <LeaderboardPageDummy roomId={id} />,
+    "Whiteboard": <Whiteboard roomId={id} />,
+    "Announcements": <AnnouncementsPage roomId={id} />,
     "Announce To Room": <UploadAnnouncement roomId={id} />,
   };
 
